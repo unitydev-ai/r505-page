@@ -1,0 +1,14 @@
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body{margin:0;background:var(--bg-page);color:var(--text-primary);font-family:var(--font-body);font-size:var(--fs-body);line-height:var(--lh-body);text-wrap:pretty}
+h1,h2,h3,h4{font-family:var(--font-display);font-stretch:var(--font-display-stretch);font-weight:var(--fw-black);line-height:var(--lh-heading);letter-spacing:var(--ls-heading);margin:0}
+p{margin:0}
+a{color:var(--text-link);text-decoration:none;transition:var(--t-hover)}
+a:hover{color:var(--text-link-hover)}
+::selection{background:color-mix(in oklab,var(--spectrum-indigo) 55%,transparent);color:var(--lav-050)}
+:focus-visible{outline:none;box-shadow:var(--focus-ring)}
+/* Reusable material utilities */
+.ic-chrome{background:var(--grad-chrome);font-stretch:var(--font-display-stretch);-webkit-background-clip:text;background-clip:text;color:transparent;font-family:var(--font-display);font-weight:var(--fw-black);letter-spacing:var(--ls-hero);line-height:var(--lh-tight);text-transform:uppercase;filter:drop-shadow(0 0 28px color-mix(in oklab,var(--spectrum-indigo) 45%,transparent))}
+.ic-spectrum-text{background:var(--grad-spectrum);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ic-grain::after{content:"";position:absolute;inset:0;pointer-events:none;background-image:var(--grain-url);background-size:180px;opacity:var(--grain-opacity);mix-blend-mode:overlay}
+.ic-scanlines::before{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(180deg,rgba(255,255,255,.5) 0 1px,transparent 1px 3px);opacity:var(--scanline-opacity)}

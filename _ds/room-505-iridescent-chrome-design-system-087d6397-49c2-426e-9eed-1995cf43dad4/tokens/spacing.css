@@ -1,0 +1,24 @@
+:root{
+--space-0:0; /* @kind spacing */
+--space-1:4px; /* @kind spacing */
+--space-2:8px; /* @kind spacing */
+--space-3:12px; /* @kind spacing */
+--space-4:16px; /* @kind spacing */
+--space-5:24px; /* @kind spacing */
+--space-6:32px; /* @kind spacing */
+--space-7:48px; /* @kind spacing */
+--space-8:64px; /* @kind spacing */
+--space-9:96px; /* @kind spacing */
+--space-10:128px; /* @kind spacing */
+--space-11:192px; /* @kind spacing */
+/* Dark space is a material: sections breathe */
+--section-y:clamp(72px,10vw,160px); /* @kind spacing */
+--section-y-poster:clamp(96px,14vw,220px); /* @kind spacing */
+--gutter:clamp(20px,4vw,64px); /* @kind spacing */
+--content-max:1200px; /* @kind spacing */
+--content-narrow:680px; /* @kind spacing */
+--poster-max:960px; /* @kind spacing */
+--stack-tight:var(--space-2); /* @kind spacing */
+--stack:var(--space-4); /* @kind spacing */
+--stack-loose:var(--space-6); /* @kind spacing */
+}

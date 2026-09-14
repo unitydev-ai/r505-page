@@ -1,0 +1,7 @@
+/* Iridescent Chrome webfonts.
+   SUBSTITUTION NOTE: no font binaries were supplied with the brief, so the
+   closest Google Fonts matches are used and served from Google's CDN.
+   Display: Archivo variable at width 112 (heavy, slightly wide geometric grotesk)
+   Body:    Space Grotesk (clean modern grotesk, excellent on dark)
+   Mono:    JetBrains Mono (technical labels, metadata) */
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112,200..900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap");

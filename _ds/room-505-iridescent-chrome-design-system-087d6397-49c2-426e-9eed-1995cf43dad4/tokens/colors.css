@@ -1,0 +1,61 @@
+:root{
+/* --- Base: deep near-black, always tinted blue-violet, never #000 --- */
+--ink-900:#0a0714; /* @kind color */
+--ink-850:#0d0919; /* @kind color */
+--ink-800:#120a24; /* @kind color */
+--ink-700:#191033; /* @kind color */
+--ink-600:#221645; /* @kind color */
+--ink-500:#2d1e59; /* @kind color */
+/* --- Spectrum: the material. cyan -> indigo -> magenta, warming to amber --- */
+--spectrum-cyan:#4ce0ff; /* @kind color */
+--spectrum-cyan-deep:#2ab6e0; /* @kind color */
+--spectrum-indigo:#7c5cff; /* @kind color */
+--spectrum-violet:#6a4ff0; /* @kind color */
+--spectrum-magenta:#ef4ea0; /* @kind color */
+--spectrum-pink:#ff4fb0; /* @kind color */
+--spectrum-amber:#ff8a3d; /* @kind color */
+--spectrum-gold:#ffc46b; /* @kind color */
+/* --- Neutrals / text --- */
+--lav-050:#f4f0ff; /* @kind color */
+--lav-200:#d8d0f0; /* @kind color */
+--lav-400:#a89ec9; /* @kind color */
+--lav-500:#8b81ad; /* @kind color */
+--lav-600:#6b6389; /* @kind color */
+--lav-700:#4a4468; /* @kind color */
+/* --- Accent (product CTA): muted product violet, not neon --- */
+--accent-500:#5b4fe0; /* @kind color */
+--accent-600:#4c40cc; /* @kind color */
+--accent-400:#6a4ff0; /* @kind color */
+--accent-300:#8b78ff; /* @kind color */
+/* --- Semantic --- */
+--success:#3fd6a8; /* @kind color */
+--warning:#ffb347; /* @kind color */
+--danger:#ff5470; /* @kind color */
+--info:#4ce0ff; /* @kind color */
+/* --- Semantic aliases --- */
+--bg-page:var(--ink-900); /* @kind color */
+--bg-elevated:var(--ink-800); /* @kind color */
+--bg-sunken:#07040f; /* @kind color */
+--surface-card:color-mix(in oklab,var(--ink-800) 78%,transparent); /* @kind color */
+--surface-card-hover:color-mix(in oklab,var(--ink-700) 80%,transparent); /* @kind color */
+--surface-glass:rgba(255,255,255,.04); /* @kind color */
+--surface-glass-strong:rgba(255,255,255,.07); /* @kind color */
+--text-primary:var(--lav-050); /* @kind color */
+--text-secondary:var(--lav-400); /* @kind color */
+--text-muted:var(--lav-600); /* @kind color */
+--text-inverse:var(--ink-900); /* @kind color */
+--text-link:var(--spectrum-cyan); /* @kind color */
+--text-link-hover:var(--lav-050); /* @kind color */
+--border-hairline:rgba(244,240,255,.08); /* @kind color */
+--border-soft:rgba(244,240,255,.14); /* @kind color */
+--border-strong:rgba(244,240,255,.24); /* @kind color */
+--border-accent:color-mix(in oklab,var(--spectrum-indigo) 55%,transparent); /* @kind color */
+/* --- Gradients (the material, as reusable fills) --- */
+--grad-spectrum:linear-gradient(100deg,var(--spectrum-cyan) 0%,#69a8ff 26%,var(--spectrum-indigo) 52%,var(--spectrum-magenta) 82%,var(--spectrum-pink) 100%); /* @kind color */
+--grad-spectrum-warm:linear-gradient(100deg,var(--spectrum-cyan) 0%,var(--spectrum-indigo) 38%,var(--spectrum-pink) 72%,var(--spectrum-amber) 100%); /* @kind color */
+--grad-chrome:linear-gradient(180deg,#ffffff 0%,#cfe9ff 14%,var(--spectrum-cyan) 30%,#8fa8ff 46%,#ffffff 52%,#c8b4ff 58%,var(--spectrum-indigo) 72%,var(--spectrum-magenta) 90%,#7a2f66 100%); /* @kind color */
+--grad-accent:linear-gradient(160deg,var(--accent-400) 0%,var(--accent-500) 55%,#3f34b0 100%); /* @kind color */
+--grad-surface:linear-gradient(160deg,rgba(255,255,255,.07) 0%,rgba(255,255,255,.02) 40%,rgba(255,255,255,0) 100%); /* @kind color */
+--grad-sheen:linear-gradient(105deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.42) 47%,rgba(255,255,255,0) 62%); /* @kind color */
+--grad-horizon:linear-gradient(0deg,var(--spectrum-pink) 0%,var(--spectrum-indigo) 55%,rgba(124,92,255,0) 100%); /* @kind color */
+}
