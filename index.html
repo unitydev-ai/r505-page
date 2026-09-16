@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
 <title>Архів Room 505</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/favicon.png">
 <meta name="description" content="Внутрішній архів студії Room 505 — проєкти, події та команда з 2015 року.">
 <meta property="og:title" content="Архів Room 505">
 <meta property="og:description" content="Внутрішній архів студії Room 505 — проєкти, події та команда з 2015 року.">
@@ -14,6 +16,8 @@
 <body>
 <x-dc>
 <helmet>
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/favicon.png">
 <link rel="stylesheet" href="ds/room-505-iridescent-chrome-design-system-087d6397-49c2-426e-9eed-1995cf43dad4/tokens/fonts.css">
 <link rel="stylesheet" href="ds/room-505-iridescent-chrome-design-system-087d6397-49c2-426e-9eed-1995cf43dad4/tokens/colors.css">
 <link rel="stylesheet" href="ds/room-505-iridescent-chrome-design-system-087d6397-49c2-426e-9eed-1995cf43dad4/tokens/typography.css">
@@ -38,6 +42,11 @@
   :root, body { --font-mono: 'Tektur', sans-serif; }
   a { color: var(--lav-050); text-decoration: none; }
   a:hover { color: var(--spectrum-cyan); }
+  /* Science Gothic — локальні файли (OFL) */
+  @font-face { font-family: 'Science Gothic'; font-style: normal; font-weight: 300; font-display: swap; src: url('assets/fonts/ScienceGothic-Light.ttf') format('truetype'); }
+  @font-face { font-family: 'Science Gothic'; font-style: normal; font-weight: 400; font-display: swap; src: url('assets/fonts/ScienceGothic-Regular.ttf') format('truetype'); }
+  @font-face { font-family: 'Science Gothic'; font-style: normal; font-weight: 500; font-display: swap; src: url('assets/fonts/ScienceGothic-Medium.ttf') format('truetype'); }
+  @font-face { font-family: 'Science Gothic'; font-style: normal; font-weight: 700; font-display: swap; src: url('assets/fonts/ScienceGothic-Bold.ttf') format('truetype'); }
   @keyframes r505-read { 0% { opacity: 0 } 100% { opacity: 1 } }
   /* кімната дихає, поки екран порожній */
   @keyframes r505-roombreathe { 0%,100% { opacity: .82 } 50% { opacity: 1 } }
@@ -190,7 +199,7 @@
 </style>
 </helmet>
 
-<div style="position:relative; width:100%; min-height:100svh; background:image-set(url('assets/archive/site-bg-full.webp') type('image/webp'), url('assets/archive/site-bg-full.png') type('image/png')) 50% 0 / cover no-repeat #07060B">
+<div style="position:relative; width:100%; min-height:100svh; background:url('assets/archive/site-bg-full.png') 50% 0 / cover no-repeat #07060B">
 <x-import component-from-global-scope="Room505IridescentChromeDesignSystem_087d63.GrainOverlay" grain-src="assets/grain.png" hint-size="100%,100%"></x-import>
 <section style="position:relative; min-height:100svh; display:grid; place-items:center; padding:var(--space-7) 0; scroll-snap-align:start">
   <div style="position:relative; z-index:3; text-align:center; padding:0 var(--gutter); max-width:900px">
@@ -209,7 +218,7 @@
 </sc-for>
 <div style="position:relative; z-index:3; width:100%; max-width:1200px; margin:0 auto; padding:var(--space-7) var(--gutter)">
 
-  <div style="position:relative; z-index:5; margin-bottom:calc(var(--space-3) * 4); text-align:center; font-family:'Tektur',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.04em; line-height:1; color:var(--lav-050); font-size:clamp(1.5rem,3.4vw,2.75rem)">Артефакти</div>
+  <div style="position:relative; z-index:5; margin-bottom:calc(var(--space-6) * 2.2); text-align:center; font-family:'Tektur',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.04em; line-height:1; color:var(--lav-050); font-size:clamp(1.5rem,3.4vw,2.75rem)">Артефакти</div>
 
   <div style="{{ stageStyle }}">
 
@@ -247,7 +256,6 @@
       <sc-if value="{{ read }}" hint-placeholder-val="{{ false }}">
         <div style="{{ readStyle }}">
           <div style="{{ readInkStyle }}">
-          <x-import component-from-global-scope="Room505IridescentChromeDesignSystem_087d63.SlashLabel" tone="accent" hint-size="auto,14px">{{ read.year }}</x-import>
           <div style="{{ titleStyle }}"><span style="{{ titleStruckStyle }}">{{ read.struck }}</span>{{ read.title }}</div>
           <sc-if value="{{ read.metaLine }}" hint-placeholder-val="{{ false }}">
             <div style="{{ metaLineStyle }}">{{ read.metaLine }}</div>
@@ -311,6 +319,9 @@
   <sc-for list="{{ diskFloaters }}" as="d" hint-placeholder-count="4">
     <div style="{{ d.style }}"></div>
   </sc-for>
+  <sc-for list="{{ teamWordFloaters }}" as="w" hint-placeholder-count="2">
+    <div style="{{ w.style }}">{{ w.text }}</div>
+  </sc-for>
   <div style="{{ rattleStyle }}"></div>
   <div style="{{ charStyle }}"></div>
   <div style="{{ faceStyle }}"></div>
@@ -350,79 +361,147 @@
 const IMG = 'assets/archive/';
 // спрайти касет — зменшені до 800px копії; оригінали лишаються в assets/archive/
 const TAPE = 'assets/tapes/';
-const MIME = p => /\.png$/i.test(p) ? 'image/png' : 'image/jpeg';
-const W = p => p.replace(/\.(png|jpe?g)$/i, '.webp');
-const IS = p => 'image-set(url("' + W(p) + '") type("image/webp"), url("' + p + '") type("' + MIME(p) + '"))';
-
 const YEARS = ['2015','2016','2017','2018','2019','2020','2021','2022'];
 
 // Тексти чорнові — заміню, коли будуть справжні описи.
 const PROJECTS = [
   { id: 'start', year: '2015', title: 'Start', img: 'tape-start.png',
     photo: 'proj-start.png', logo: true,
-    type: 'Подія', client: 'Room 505', platform: '—', people: 'Усі, хто був того дня',
+    type: 'Подія', client: 'Room 505', platform: '—', people: 'Віталій · Віталій · Ілля',
     text: 'Заснування студії — кімната 505 в общазі, два столи й один комп\'ютер на всіх. Назву взяли з номера на дверях.' },
   { id: 'pingit', year: '2015', title: 'Ping IT', img: 'tape-pingit.png',
     photo: 'proj-pingit.jpg',
-    type: 'Подія', client: 'Room 505', platform: '—', people: 'Віталій · Ілля · Стас',
+    type: 'Подія', client: 'Room 505', platform: '—', people: 'Віталій · Віталій · Ілля',
     text: 'Перший вихід із кімнати назовні — ІТ-конференція, три квитки й одна візитка на всіх.' },
   { id: 'kirjs', year: '2015', title: 'Kirovohrad JS', img: 'tape-js.png',
     photo: 'proj-kirjs.jpg',
-    type: 'Подія', client: 'Room 505', platform: '—', people: 'Віталій · Ілля',
+    type: 'Подія', client: 'Room 505', platform: '—', people: 'Віталій · Віталій · Ілля',
     text: 'Локальний JS-мітап у Кіровограді. Слухали інших, познайомились із половиною міської ІТ-тусовки.' },
   { id: 'dragonheart', year: '2016', title: 'Dragon Heart', struck: 'New Shit 3D ', img: 'tape-dragonheart.png',
     photo: 'proj-dragonheart.png',
-    type: 'Гра', client: 'Власний проект', platform: 'PC', people: 'Віталій · Ілля',
+    type: 'Гра', client: 'Власний проект', platform: 'PC', people: 'Віталій · Віталій · Ілля · Ігор',
     text: 'Спершу називалось New Shit 3D — і саме так і виглядало. Перейменували, дороблили меню, дракона лишили.' },
   { id: 'redbaron', year: '2016', title: 'Red Baron', img: 'tape-redbaron.png',
     photo: 'proj-redbaron.jpg',
-    type: 'Гра', client: 'Власний проект', platform: 'Mobile', people: 'Віталій Зозуля · Ілля Ковалюнко · Віталій Данчул · Ігор Астахов',
+    type: 'Гра', client: 'Власний проект', platform: 'Mobile', people: 'Віталій · Віталій · Ілля · Ігор',
     text: 'Червоний триплан, ангар і магазин апгрейдів. Імена команди бігли рядком по стінах ангара — інших титрів не було.' },
   { id: 'likeit', year: '2016', title: 'Like IT', img: 'tape-likeit.png',
     photo: 'proj-likeit.jpg',
-    type: 'Подія', client: 'Room 505', platform: '—', people: 'Віталій · Ілля · Стас',
+    type: 'Подія', client: 'Room 505', platform: '—', people: 'Віталій · Віталій · Ілля · Ігор',
     text: 'ІТ-конференція в Запоріжжі. Між доповідями вибрались на Хортицю — фото з греблею лишилось єдиним звітом.' },
   { id: 'testassignment', year: '2016', title: 'Test Assignment', img: 'tape-testassignment.png',
     photo: 'proj-testassignment.jpg',
-    type: 'Подія', client: 'Room 505', platform: '—', people: 'Віталій · Ілля',
+    type: 'Подія', client: 'Room 505', platform: '—', people: 'Віталій · Віталій · Ілля · Ігор',
     text: 'Тестове завдання на двох, одна кімната й один монітор. Здали вчасно — і саме з цього почалась робота на замовника.' },
   { id: 'vesna', year: '2016', title: 'Vesna Soft', img: 'tape-vesna.png',
     photo: 'proj-vesna.jpg',
-    type: 'Подія', client: 'Room 505', platform: '—', people: 'Віталій · Віталій · Ігор · Ілля',
+    type: 'Подія', client: 'Room 505', platform: '—', people: 'Віталій · Віталій · Ілля · Ігор',
     text: 'ІТ-фестиваль Vesna-Soft. Приїхали вчотирьох, двоє прямо з навчання — у формі, бо перевдягатись не було коли.' },
   { id: 'itrevolution', year: '2016', title: 'IT Revolution', img: 'tape-itrevolution.png',
     photo: 'proj-itrevolution.jpg',
-    type: 'Подія', client: 'Room 505', platform: '—', people: 'Віталій · Ілля',
+    type: 'Подія', client: 'Room 505', platform: '—', people: 'Віталій · Віталій · Ілля · Ігор',
     text: 'Хакатон в аудиторії: один ноутбук на двох, три чашки на столі й дедлайн на ранок.' },
   { id: 'ggj2017', year: '2017', title: 'GGJ 2017', img: 'tape-ggj2017.png', photo: 'proj-ggj2017.jpg',
-    type: 'Подія', client: 'Global Game Jam', platform: '—', people: 'Уся кімната',
+    type: 'Подія', client: 'Global Game Jam', platform: '—', people: 'Віталій · Віталій · Ілля · Ігор',
     text: 'Сорок вісім годин, мішки-крісла замість ліжок і гра, зроблена без жодної повної ночі сну.' },
   { id: 'shotter', year: '2017', title: 'Shotter', img: 'tape-shotter.png', photo: 'proj-shotter.png',
-    type: 'Гра', client: 'Власний проект', platform: 'PC', people: 'Віталій · Ілля',
+    type: 'Гра', client: 'Власний проект', platform: 'PC', people: 'Віталій · Ілля · Ігор',
     text: 'Піксельний шутер із крилатим черепом на титульному екрані. Меню зробили раніше за геймплей.' },
   { id: 'shoushenk', year: '2017', title: 'Шоушенк', img: 'tape-shoushenk.png', photo: 'proj-shoushenk.png',
-    type: 'Гра', client: 'Власний проект', platform: 'PC', people: 'Віталій · Ілля',
+    type: 'Гра', client: 'Власний проект', platform: 'PC', people: 'Віталій · Ілля · Ігор',
     text: 'Квест про втечу, якої не було. Назву довелось трохи виправити просто на титульному екрані.' },
-  { id: 'starinc', year: '2017', title: 'Star Inc', img: 'tape-starinc.png', photo: 'proj-starinc.png',
-    type: 'Гра', client: 'Власний проект', platform: 'Mobile', people: 'Віталій · Ілля',
-    text: 'Ізометричне місто з портом, дирижаблем і десятком вивісок, які писали самі.' },
-  { id: 'tyuryachka', year: '2017', title: 'Тюрячка', img: 'tape-tyuryachka.png', photo: 'proj-tyuryachka.jpg',
-    type: 'Гра', client: 'Власний проект', platform: 'PC', people: 'Віталій · Ілля',
-    text: 'Камера з двома нарами, побудована в 3D Coat. Текстури лупили просто поверх геометрії.' },
   { id: 'zombie', year: '2017', title: 'Zombie Clicker', img: 'tape-zombie.png', photo: 'proj-zombie.png',
-    type: 'Гра', client: 'Власний проект', platform: 'Mobile', people: 'Віталій · Ілля',
+    type: 'Гра', client: 'Власний проект', platform: 'Mobile', people: 'Віталій · Ілля · Ігор',
     text: 'Клікер із рукою, що лізе з могили. На екрані вибору лишили дисклеймер, який усе пояснює.' },
+  { id: 'tyuryachka', year: '2017', title: 'Тюрячка', img: 'tape-tyuryachka.png', photo: 'proj-tyuryachka.jpg',
+    type: 'Гра', client: 'Власний проект', platform: 'PC', people: 'Віталій · Ілля · Ігор',
+    text: 'Камера з двома нарами, побудована в 3D Coat. Текстури лупили просто поверх геометрії.' },
+  { id: 'starinc', year: '2017', title: 'Star Inc', img: 'tape-starinc.png', photo: 'proj-starinc.png',
+    type: 'Гра', client: 'Власний проект', platform: 'Mobile', people: 'Віталій · Ілля · Ігор',
+    text: 'Ізометричне місто з портом, дирижаблем і десятком вивісок, які писали самі.' },
+  { id: 'vrschool', year: '2018', title: 'VR School Test', img: 'tape-vrschool.png',
+    photo: 'proj-vrschool.jpg',
+    type: 'Навчальна система', client: 'Власний проект', platform: 'VR', people: 'Віталій · Ілля',
+    text: 'Тестова сцена навчального класу: неонові панелі, планета за вікном і підлога, розмічена під переміщення.' },
+  { id: 'railway', year: '2018', title: 'Railway Stuff', img: 'tape-railway.png',
+    photo: 'proj-railway.png', photoPos: '60%', photoZoom: '115% auto',
+    type: 'Тренажер', client: 'Залізниця', platform: 'VR', people: 'Віталій · Ілля',
+    text: 'Портальний кран над колією, вагони й відкрите небо. Техніку збирали за фото з реального депо.' },
   { id: 'yak42', year: '2015', title: 'ЯК-42', img: 'tape-yak42.png',
     photo: 'proj-yak42.png',
-    type: 'Симулятор', client: 'Власний проект', platform: 'PC', people: 'Віталій · Ілля',
+    type: 'Навчальна система', client: 'Власний проект', platform: 'PC', people: 'Віталій · Віталій · Ілля',
     text: 'Прилади, гори й посадка з боковим вітром. Перший наш проект, де фізика важила більше за картинку.' },
-  { id: 'crane', year: '2019', title: 'VR Crane', img: 'tape-vr-crane-clean.png',
+  { id: 'kyiv2222', year: '2022', title: 'Kyiv 2222', img: 'tape-kyiv2222.png',
+    photo: 'proj-kyiv2222.jpg',
+    type: 'Гра', client: 'Власний проект', platform: 'Mobile', people: 'Ілля · Ігор · Стас',
+    text: 'Кіберпанк-Київ через двісті років: неонові титри, імплант в оці й меню українською.' },
+  { id: 'barge', year: '2022', title: 'Barge Render', img: 'tape-barge.png',
+    photo: 'proj-barge.png',
+    type: 'Візуалізація', client: 'Морський підрядник', platform: 'Рендер', people: 'Віталій · Ілля · Стас',
+    text: 'Самопідйомна барка на опорах серед відкритого моря, знята на заході. Рендер робили під презентацію.' },
+  { id: 'workshop', year: '2022', title: 'Workshop Demo', img: 'tape-workshop.png',
+    photo: 'proj-workshop.jpg',
+    type: 'Тренажер', client: 'Власний проект', platform: 'VR', people: 'Віталій · Ілля',
+    text: 'Верстак із живим інструментом: шурупокрут, лампа на струбцині й свердління по-справжньому.' },
+  { id: 'upwork', year: '2022', title: 'Upwork', img: 'tape-upwork.png',
+    photo: 'proj-upwork.png', photoPos: '0%', photoZoom: 'cover',
+    type: 'Подія', client: 'Room 505', platform: 'Веб', people: 'Віталій · Ілля',
+    text: 'Профіль студії на Upwork: перші зовнішні замовники, 396 годин і чотири закриті проєкти.' },
+  { id: 'tap', year: '2022', title: 'TAP', img: 'tape-tap.png',
+    photo: 'proj-tap.png', photoPos: '0%', photoZoom: 'cover',
+    type: 'Подія', client: 'Training All People', platform: 'Веб · VR', people: 'Віталій · Ілля · Стас · Роберт',
+    text: 'Тренажери для техніків промислових роботів: пульт, конвеєр і манипулятор у цеху.' },
+  { id: 'newsite', year: '2021', title: 'Новий сайт', img: 'tape-newsite.png',
+    photo: 'proj-newsite.png', photoPos: '0%', photoZoom: 'cover',
+    type: 'Подія', client: 'Room 505', platform: 'Веб', people: 'Віталій · Ілля',
+    text: 'Перший власний сайт студії: ізометрична ілюстрація на весь екран і опис того, що ми справді робимо.' },
+  { id: 'asdtug', year: '2021', title: 'ASD Tug', img: 'tape-asdtug.png',
+    photo: 'proj-asdtug.png',
+    type: 'Тренажер', client: 'Морський навчальний центр', platform: 'PC', people: 'Віталій · Ілля · Стас',
+    text: 'Рубка буксира в тумані: два пульти, індикатори вітру й судно, що виходить з молока прямо по курсу.' },
+  { id: 'playground', year: '2021', title: 'Playground VR', img: 'tape-playground.png',
+    photo: 'proj-playground.png',
+    type: 'Гра', client: 'Власний проект', platform: 'VR', people: 'Ілля · Роберт · Влад',
+    text: 'Місто-пісочниця з реактивними рукавицями: злітаєш над парком, колесом огляду й дахами.' },
+  { id: 'crane', year: '2021', title: 'VR Crane', img: 'tape-vr-crane-clean.png',
     photo: 'proj-crane.png',
-    type: 'Тренажер', client: 'Портовий оператор', platform: 'VR', people: 'Олександр · Ігор',
+    type: 'Тренажер', client: 'Портовий оператор', platform: 'VR', people: 'Віталій · Ілля · Стас',
     text: 'Сигнальник на причалі, суднові крани, вантаж на стропах. Жести рук моделювали з відео реальної зміни.' },
+  { id: 'zombie3', year: '2020', title: 'Знову зомбі?', img: 'tape-zombie3.png',
+    photo: 'proj-zombie3.jpg', photoPos: '50%', photoZoom: 'cover',
+    type: 'Гра', client: 'Власний проект', platform: 'VR', people: 'Віталій · Ілля',
+    text: 'Бетонний коридор, лазерний приціл і зомбі, що виходить із темряви. Так, знову зомбі.' },
+  { id: 'igf', year: '2020', title: 'IGF', img: 'tape-igf.png',
+    photo: 'proj-igf.png',
+    type: 'Тренажер', client: 'Морський навчальний центр', platform: 'VR', people: 'Віталій · Ілля · Стас',
+    text: 'Центр управління газовою установкою: пульти, схеми на моніторах і оператор у синьому комбінезоні.' },
+  { id: 'smarty', year: '2020', title: 'Smarty', img: 'tape-smarty.png',
+    photo: 'proj-bocce.jpg',
+    type: 'Навчальна система', client: 'Освітній проект', platform: 'Mobile', people: 'Ілля · Стас',
+    text: 'Дитяча освітня програма — веселка, хмарка й літери, які ми малювали разом із замовником.' },
+  { id: 'viar505', year: '2020', title: 'VIAR 505', img: 'tape-viar505.png',
+    photo: 'proj-viar505.jpg',
+    type: 'Демо', client: 'Room 505', platform: 'VR', people: 'Віталій · Ілля · Стас',
+    text: 'Виїзна VR-станція під червоною парасолькою: гарнітура, телевізор для глядачів і черга охочих.' },
+  { id: 'bocce', year: '2020', title: 'Bocce', img: 'tape-bocce.png',
+    photo: 'proj-smarty.png',
+    type: 'Гра', client: 'Власний проект', platform: 'VR', people: 'Віталій · Ілля · Роберт',
+    text: 'Майданчик для бочче на набережній: трава, банери, табло і місто на горизонті.' },
+  { id: 'davinci', year: '2020', title: 'Da Vinci', img: 'tape-davinci.png',
+    photo: 'proj-davinci.png',
+    type: 'Реконструкція', client: 'Музей', platform: 'VR', people: 'Віталій · Ілля · Роберт',
+    text: 'Виставковий зал із машинами Да Вінчі: макети під склом, підсвічені креслення, тиха галерея.' },
+  { id: 'krakow', year: '2019', title: 'Krakow VR', img: 'tape-krakow.png',
+    photo: 'proj-krakow.jpg', photoPos: '62%', photoZoom: 'cover',
+    type: 'Реконструкція', client: 'Музей', platform: 'VR', people: 'Віталій · Ілля · Ігор · Стас',
+    text: 'Середньовічне місто, зібране по кресленнях: ратуша, ринок, бочки під стінами. Ходити можна було всюди.' },
+  { id: 'gamedevconf', year: '2019', title: 'Game Dev Conference', img: 'tape-gamedevconf.png',
+    photo: 'proj-gamedevconf.jpg',
+    type: 'Подія', client: 'Room 505', platform: '—', people: 'Віталій · Ілля',
+    text: 'Конференція у Львові. Бейджі, ліфтове селфі і два дні доповідей, після яких хотілось усе переробити.' },
   { id: 'mooring', year: '2019', title: 'Mooring', img: 'tape-mooring.png',
     photo: 'proj-mooring.png',
-    type: 'Тренажер', client: 'Морський навчальний центр', platform: 'VR', people: 'Стас · Ігор · Влад',
+    type: 'Тренажер', client: 'Морський навчальний центр', platform: 'VR', people: 'Віталій · Ілля · Стас',
     text: 'Швартова палуба: лебідки, троси, ланцюги і два матроси, які чекають команди. Кожен елемент звіряли з процедурами.' }
 ];
 
@@ -441,11 +520,11 @@ const CREW = [
   { id: 'c1', name: 'Віталій', img: 'disk-vitalii.png', onPhoto: true, bio: '#2015 #art 3D master' },
   { id: 'c7', name: 'Віталій', bio: '#2015 #dev' },
   { id: 'c2', name: 'Ілля', img: 'disk-illia-full.png', onPhoto: true, bio: '#2015 #dev VR hater' },
-  { id: 'c4', name: 'Ігор', bio: '#2015 #tech artist' },
+  { id: 'c4', name: 'Ігор', bio: '#2016 #2D artist' },
   { id: 'c5', name: 'Стас', img: 'disk-stas.png', onPhoto: true, bio: '#2018 #dev Obi Rope expert' },
   { id: 'c8', name: 'Роберт', img: 'disk-robert.png', onPhoto: true, bio: '#2020 #dev VR playground enjoyer' },
-  { id: 'c6', name: 'Влад', bio: '#2021 #animation #VR hands' },
-  { id: 'c3', name: 'Олександр', bio: '#2021 #3d #heavy machinery' }
+  { id: 'c6', name: 'Влад', bio: '#2021 #dev #outsource' },
+  { id: 'c3', name: 'Олександр', bio: '#2021 #dev #outsource' }
 ];
 
 class Component extends DCLogic {
@@ -510,6 +589,30 @@ class Component extends DCLogic {
     clearInterval(this._scr); clearTimeout(this._fx1); clearTimeout(this._fx2);
     clearTimeout(this._ph1); clearTimeout(this._ph2); clearTimeout(this._sw);
   }
+  // кадр може не встигнути в передзавантаження (новий проєкт, гаряча заміна даних) —
+  // тоді тягнемо його на вимогу, інакше екран лишається з попереднім кадром
+  preloadPhoto(name) {
+    if (!name) return;
+    this._ready = this._ready || {};
+    this._loading = this._loading || {};
+    if (this._ready[name] || this._loading[name]) return;
+    this._loading[name] = true;
+    const im = new Image();
+    im.onload = () => {
+      this._ready[name] = true;
+      this._hue = this._hue || {};
+      this._hue[name] = this.dominant(im);
+      this.forceUpdate();
+    };
+    im.onerror = () => { this._ready[name] = true; this.forceUpdate(); };
+    im.src = IMG + name;
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (!prevState || prevState.read !== this.state.read) {
+      const p = PROJECTS.find(x => x.id === this.state.read);
+      if (p && p.photo) this.preloadPhoto(p.photo);
+    }
+  }
   componentDidMount() {
     this.trackWidth();
     // передзавантаження кадрів: до першого драгу вони вже в кеші
@@ -522,16 +625,10 @@ class Component extends DCLogic {
         this._hue[p.photo] = this.dominant(im);
         this.forceUpdate();
       };
-      // гріємо саме той файл, який реально малюється (WebP), з фолбеком на оригінал
-      im.onerror = () => { if (im.src.endsWith('.webp')) im.src = IMG + p.photo; };
-      im.src = W(IMG + p.photo);
+      im.src = IMG + p.photo;
     });
     // спрайти касет теж: без цього касета «спавнилась» посеред анімації прильоту
-    PROJECTS.forEach(p => {
-      const im = new Image();
-      im.onerror = () => { if (im.src.endsWith('.webp')) im.src = TAPE + p.img; };
-      im.src = W(TAPE + p.img);
-    });
+    PROJECTS.forEach(p => { const im = new Image(); im.src = TAPE + p.img; });
   }
   // заміна касети на льоту: старий кадр скручується вгору, спалах шуму, новий викатується знизу
   loadTape(id) {
@@ -651,11 +748,16 @@ class Component extends DCLogic {
       const sc = scatter[i];
       // сусіди в тій самій смузі відступають, звільняючи місце збільшеній касеті
       const hotI = this.state.hot ? list.findIndex(q => q.id === this.state.hot) : -1;
+      // стовпці послідовні: перша половина ліворуч, решта праворуч
+      const half = Math.ceil(n / 2);
+      const col = i < half ? 0 : 1, myPos = i - col * half;
       let yield_ = 0;
-      if (hotI >= 0 && hotI !== i && hotI % 2 === i % 2) {
-        const myPos = Math.floor(i / 2), hotPos = Math.floor(hotI / 2);
-        const dist = Math.abs(myPos - hotPos);
-        yield_ = (myPos < hotPos ? -1 : 1) * (dist === 1 ? 30 : 14);
+      if (hotI >= 0 && hotI !== i) {
+        const hotCol = hotI < half ? 0 : 1, hotPos = hotI - hotCol * half;
+        if (hotCol === col) {
+          const dist = Math.abs(myPos - hotPos);
+          yield_ = (myPos < hotPos ? -1 : 1) * (dist === 1 ? 30 : 14);
+        }
       }
       const pull = 0;
       if (!this.refs3d[p.id]) this.refs3d[p.id] = React.createRef();
@@ -720,7 +822,7 @@ class Component extends DCLogic {
         // вертикальної смуги і в горизонтальній давали 700px на касету
         slotStyle: {
           position: 'relative',
-          flex: narrow ? '0 0 clamp(96px,26vw,150px)' : undefined,
+          flex: narrow ? '0 0 clamp(96px,26vw,150px)' : '0 0 auto',
           width: narrow ? 'clamp(96px,26vw,150px)' : '72%',
           transform: 'translateX(' + (Number(sc.nudge) * 0.4).toFixed(1) + 'px)',
           // 200 > max(sc.z)=118 — інакше наведена касета лягала ПІД сусідів
@@ -731,8 +833,8 @@ class Component extends DCLogic {
           // стагер відчутний (по позиції в стовпці, а не по індексу) — інакше
           // всі касети зникали й з'являлись фактично одним кадром
           animation: phase === 'out'
-            ? 'r505-tapeout 320ms var(--ease-in-out) ' + (Math.floor(i / 2) * 55 + (i % 2) * 28) + 'ms both'
-            : 'r505-tapein-' + (i % 2 === 0 ? 'l' : 'r') + ' 720ms var(--ease-out) ' + (Math.floor(i / 2) * 150 + (i % 2) * 75) + 'ms both'
+            ? 'r505-tapeout 320ms var(--ease-in-out) ' + (myPos * 55 + col * 28) + 'ms both'
+            : 'r505-tapein-' + (col === 0 ? 'l' : 'r') + ' 720ms var(--ease-out) ' + (myPos * 150 + col * 75) + 'ms both'
         },
         driftStyle: {
           // не 'none': вимкнення анімації скидало transform і касета підстрибувала
@@ -750,7 +852,7 @@ class Component extends DCLogic {
         },
         artStyle: {
           width: '100%', aspectRatio: '1536 / 2752',
-          background: IS(TAPE + p.img) + ' center / contain no-repeat',
+          background: 'url("' + TAPE + p.img + '") center / contain no-repeat',
           filter: hot
             ? 'drop-shadow(0 24px 40px rgba(0,0,0,.65)) drop-shadow(0 0 10px rgba(76,224,255,.55)) drop-shadow(0 0 28px rgba(124,92,255,.42))'
             : (isRead
@@ -778,13 +880,18 @@ class Component extends DCLogic {
 
     return {
       years, tapes,
-      tapesLeft: tapes.filter((t, i) => i % 2 === 0),
-      tapesRight: tapes.filter((t, i) => i % 2 === 1),
+      // колонки читаються як текст: ліва — перша половина зверху вниз, права — решта
+      tapesLeft: tapes.slice(0, Math.ceil(tapes.length / 2)),
+      tapesRight: tapes.slice(Math.ceil(tapes.length / 2)),
       panelRef: this.panel,
       read: readP ? {
         year: readP.year, title: readP.title, struck: readP.struck || '', people: readP.people, text: readP.text,
         // з кадром метадані стискаємо в один рядок, щоб титри влізли в нижню третину
-        metaLine: readP.photo ? [readP.type, readP.client, readP.platform].filter(v => v && v !== '—').join('  ·  ') : '',
+        // шлях як у файловій системі: рік / категорія [/ тип проєкту]
+        metaLine: readP.photo
+          ? [readP.year, readP.type === 'Подія' ? 'подія' : 'проект', readP.type === 'Подія' ? null : readP.type]
+              .filter(Boolean).join(' / ')
+          : '',
         rows: readP.photo ? [] : [
           { k: 'Тип', v: readP.type },
           { k: 'Замовник', v: readP.client },
@@ -823,7 +930,9 @@ class Component extends DCLogic {
       },
       stageStyle: {
         position: 'relative', width: '100vw', marginLeft: 'calc(50% - 50vw)',
-        padding: '0 clamp(10px,1.6vw,24px)',
+        // бічний запас більший за амплітуду дрейфу (~±45px), інакше касети
+        // біля краю зрізає overflow:hidden і їх неможливо вхопити для драгу
+        padding: narrow ? '0 clamp(10px,1.6vw,24px)' : '0 clamp(56px,5vw,88px)',
         display: 'flex',
         flexDirection: narrow ? 'column' : 'row',
         alignItems: narrow ? 'center' : 'stretch',
@@ -837,8 +946,11 @@ class Component extends DCLogic {
         alignItems: 'flex-start', gap: 'clamp(6px,2vw,18px)', flexWrap: 'wrap'
       } : {
         flex: '0 0 clamp(104px,11vw,190px)', position: 'relative',
+        // фіксована висота смуги тримає висоту сцени сталою за будь-якого числа
+        // касет — розмір самих касет при цьому лишається однаковим
+        height: 'min(64svh, 600px)',
         display: 'flex', flexDirection: 'column', justifyContent: 'space-around',
-        alignItems: 'center', gap: 'var(--space-3)', paddingBottom: 'var(--space-6)'
+        alignItems: 'center', gap: 'var(--space-2)'
       },
       monitorStyle: {
         // ширину обмежуємо і висотою вікна — інакше нижня рамка з кнопками йде за фолд
@@ -857,7 +969,7 @@ class Component extends DCLogic {
       tvSpillStyle: {
         position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
         // силует без внутрішніх отворів — інакше світились би прорізи під кнопки й екран
-        background: IS(IMG + 'tv-silhouette.png') + ' center / contain no-repeat',
+        background: 'url("' + IMG + 'tv-silhouette.png") center / contain no-repeat',
         opacity: (this.props.glowStrength ?? 1) * 0.85,
         filter: (() => {
           const g = this.props.glowSize ?? 30;
@@ -893,7 +1005,7 @@ class Component extends DCLogic {
       // тому має справжню форму силуету (плінтус, ніжки), а не еліпс
       tvContactStyle: {
         position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
-        background: IS(IMG + 'tv-body-v2.png') + ' center / contain no-repeat',
+        background: 'url("' + IMG + 'tv-body-v2.png") center / contain no-repeat',
         transformOrigin: '50% 100%',
         transform: 'scaleY(.075) translateY(30%)',
         filter: 'brightness(0) blur(11px)',
@@ -905,7 +1017,7 @@ class Component extends DCLogic {
       // корпус лежить ПОВЕРХ екрана — у нього справжні прорізи
       bodyStyle: {
         position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 3,
-        background: IS(IMG + 'tv-body-v2.png') + ' center / contain no-repeat'
+        background: 'url("' + IMG + 'tv-body-v2.png") center / contain no-repeat'
       },
       // прорізи, зміряні по альфі спрайта
       panelStyle: {
@@ -916,11 +1028,11 @@ class Component extends DCLogic {
       gateStyle: {
         position: 'absolute', left: '15.05%', top: '86.72%', width: '33.84%', height: '6.23%',
         zIndex: 4, pointerEvents: 'none',
-        background: IS(IMG + 'tv-gate.png') + ' center / 100% 100% no-repeat'
+        background: 'url("' + IMG + 'tv-gate.png") center / 100% 100% no-repeat'
       },
       screenBaseStyle: {
         position: 'absolute', inset: 0,
-        background: IS(IMG + 'tv2-screen.png') + ' center / cover no-repeat #1b1b1e'
+        background: 'url("' + IMG + 'tv2-screen.png") center / cover no-repeat #1b1b1e'
       },
       screenGlowStyle: {
         position: 'absolute', inset: 0, pointerEvents: 'none',
@@ -934,13 +1046,13 @@ class Component extends DCLogic {
       btnLeftStyle: {
         position: 'absolute', left: '61.60%', top: '86.05%', width: '6.41%', height: '8.70%',
         zIndex: 4, border: 0, padding: 0, cursor: 'pointer', borderRadius: 4,
-        background: IS(IMG + 'tv2-btn-left.png') + ' center / contain no-repeat',
+        background: 'url("' + IMG + 'tv2-btn-left.png") center / contain no-repeat',
         filter: 'brightness(1)', transition: 'filter var(--dur-fast) var(--ease-out), transform 90ms var(--ease-out)'
       },
       btnRightStyle: {
         position: 'absolute', left: '72.41%', top: '85.97%', width: '6.41%', height: '8.70%',
         zIndex: 4, border: 0, padding: 0, cursor: 'pointer', borderRadius: 4,
-        background: IS(IMG + 'tv2-btn-right.png') + ' center / contain no-repeat',
+        background: 'url("' + IMG + 'tv2-btn-right.png") center / contain no-repeat',
         filter: 'brightness(1)', transition: 'filter var(--dur-fast) var(--ease-out), transform 90ms var(--ease-out)'
       },
       // скрембл випадковий, але після нього одразу цільовий рік — без відкату на старий
@@ -1001,7 +1113,7 @@ class Component extends DCLogic {
           : (readP ? (readP.photo && !photoReady ? 0.62 : 0)
                    : (fx ? 0.42 : 0.2)),
         transition: 'opacity 900ms var(--ease-out)',
-        background: IS(IMG + 'tv-static.png') + ' 0 0 repeat',
+        background: 'url("' + IMG + 'tv-static.png") 0 0 repeat',
         backgroundSize: '300px 300px',
         animation: 'r505-static .7s steps(1,end) infinite',
         mixBlendMode: 'screen',
@@ -1025,7 +1137,7 @@ class Component extends DCLogic {
       // зворотний до проявлення: кадр іде назад у шум — блюр, контраст, темніє
       photoOutStyle: this.state.outPhoto ? {
         position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
-        background: IS(IMG + this.state.outPhoto) + ' center / cover no-repeat',
+        background: 'url("' + IMG + this.state.outPhoto + '") center / cover no-repeat',
         animation: 'r505-photoout 620ms var(--ease-in-out) both'
       } : { display: 'none' },
       // розмиті касети, що повільно дрейфують у глибині сцени
@@ -1034,7 +1146,7 @@ class Component extends DCLogic {
           position: 'absolute', left: f.x + '%', top: f.y + '%',
           width: f.w + 'px', aspectRatio: '1536 / 2752',
           zIndex: 1, pointerEvents: 'none',
-          background: IS(TAPE + f.img) + ' center / contain no-repeat',
+          background: 'url("' + TAPE + f.img + '") center / contain no-repeat',
           filter: 'blur(' + f.blur + 'px) saturate(.35) brightness(.5)',
           opacity: f.o * (this.props.floatersOpacity ?? 1),
           animation: 'r505-float' + (1 + i % 3) + ' ' + f.dur + 's ease-in-out infinite ' + (-i * 5) + 's'
@@ -1050,7 +1162,7 @@ class Component extends DCLogic {
         position: 'absolute', left: '32%', top: '8%',
         width: 'clamp(130px,15vw,280px)', aspectRatio: '421 / 520',
         zIndex: 1, pointerEvents: 'none',
-        background: IS(TAPE + 'float-px.png') + ' center / contain no-repeat',
+        background: 'url("' + TAPE + 'float-px.png") center / contain no-repeat',
         filter: 'blur(8px) saturate(.35) brightness(.55)',
         opacity: 0.26 * (this.props.floatersOpacity ?? 1),
         transform: 'rotate(-5deg)',
@@ -1060,7 +1172,7 @@ class Component extends DCLogic {
         position: 'absolute', right: '18%', top: '16%',
         width: 'clamp(120px,13vw,240px)', aspectRatio: '407 / 520',
         zIndex: 1, pointerEvents: 'none',
-        background: IS(TAPE + 'float-face.png') + ' center / contain no-repeat',
+        background: 'url("' + TAPE + 'float-face.png") center / contain no-repeat',
         filter: 'blur(8px) saturate(.35) brightness(.5)',
         opacity: 0.3 * (this.props.floatersOpacity ?? 1),
         animation: 'r505-float1 51s ease-in-out infinite -20s'
@@ -1070,7 +1182,7 @@ class Component extends DCLogic {
         position: 'absolute', left: '13%', bottom: '2%',
         width: 'clamp(150px,17vw,320px)', aspectRatio: '503 / 520',
         zIndex: 1, pointerEvents: 'none',
-        background: IS(TAPE + 'float-char.png') + ' center / contain no-repeat',
+        background: 'url("' + TAPE + 'float-char.png") center / contain no-repeat',
         filter: 'blur(7px) saturate(.4) brightness(.55)',
         opacity: 0.24 * (this.props.floatersOpacity ?? 1),
         animation: 'r505-float3 55s ease-in-out infinite -12s'
@@ -1085,8 +1197,8 @@ class Component extends DCLogic {
         style: {
           position: 'absolute', left: d.left, top: d.top,
           width: 'clamp(' + (d.w * 7) + 'px,' + d.w + 'vw,' + (d.w * 14) + 'px)',
-          aspectRatio: '1 / 1', zIndex: 1, pointerEvents: 'none',
-          background: IS(TAPE + 'disk-blank.png') + ' center / contain no-repeat',
+          aspectRatio: '740 / 794', zIndex: 1, pointerEvents: 'none',
+          background: 'url("' + TAPE + 'disk-blank.png") center / contain no-repeat',
           transform: 'rotate(' + d.rot + 'deg)',
           filter: 'blur(' + d.blur + 'px) saturate(.35) brightness(.5)',
           opacity: d.o * (this.props.floatersOpacity ?? 1),
@@ -1095,13 +1207,15 @@ class Component extends DCLogic {
       })),
       // текстові «уламки» дрейфують у фоні так само, як касети
       // на вузькому екрані текстові уламки лізуть під телевізор — лишаємо два
-      wordFloaters: (vw < 760 ? [] : [
-        { text: 'АДРУІНО УНО', left: '7%', top: '24%', rot: -8, size: 'clamp(22px,3.4vw,52px)', blur: 5, o: 0.16, dur: 47, i: 0 },
-        { text: 'СКИНЬТЕ ДІЛД', left: '68%', top: '62%', rot: 6, size: 'clamp(22px,3.4vw,52px)', blur: 5, o: 0.16, dur: 53, i: 2 },
-        { text: 'ТИ ПАПУТАЛ МАЛОЛЄТКА', left: '6%', top: '66%', rot: -4, size: 'clamp(20px,3vw,46px)', blur: 5, o: 0.16, dur: 61, i: 1 },
-        { text: 'ВИ В ІГРИ ІГРАЛІ?', left: '66%', top: '18%', rot: 9, size: 'clamp(22px,3.2vw,48px)', blur: 5, o: 0.16, dur: 43, i: 0 },
-        { text: 'ОЦЕНІВАЮ — ПОРАЗІТЄЛЬНОЄ ГАВНО', left: '41%', top: '84%', rot: -3, size: 'clamp(14px,2vw,30px)', blur: 5, o: 0.16, dur: 57, i: 2 }
-      ]).map(w => ({
+      // позиції — у «кишенях» між фоновими касетами; на вузькому вікні
+      // кишень не лишається, тож тримаємо лише один підпис
+      wordFloaters: (vw < 760 ? [] : (vw < 1200 ? [
+        { text: 'АДРУІНО УНО', left: '1%', top: '50%', rot: -8, size: 'clamp(22px,3.4vw,52px)', blur: 5, o: 0.16, dur: 47, i: 0 }
+      ] : [
+        { text: 'АДРУІНО УНО', left: '1%', top: '50%', rot: -8, size: 'clamp(22px,3.4vw,52px)', blur: 5, o: 0.16, dur: 47, i: 0 },
+        { text: 'ВИ В ІГРИ ІГРАЛІ?', left: '72%', top: '30%', rot: 9, size: 'clamp(22px,3.2vw,48px)', blur: 5, o: 0.16, dur: 43, i: 2 },
+        { text: 'ОЦЕНІВАЮ — ПОРАЗІТЄЛЬНОЄ ГАВНО', left: '20%', top: '15%', rot: -2, size: 'clamp(17px,2.4vw,36px)', blur: 5, o: 0.16, dur: 57, i: 1 }
+      ])).map(w => ({
         text: w.text,
         style: {
           // дрейф іде вниз, тож нижні уламки обрізались об край секції:
@@ -1117,12 +1231,31 @@ class Component extends DCLogic {
           animation: 'r505-float' + (1 + w.i % 3) + ' ' + w.dur + 's ease-in-out infinite ' + (-w.i * 7) + 's'
         }
       })),
+      // ті самі текстові уламки у фоні секції команди — інші фрази й позиції
+      // до 1200px сітка команди займає всю висоту — кишені для підписів немає
+      teamWordFloaters: (vw < 1200 ? [] : [
+        { text: 'СКИНЬТЕ ДІЛД', left: '36%', top: '92%', rot: 6, size: 'clamp(22px,3.4vw,52px)', blur: 5, o: 0.15, dur: 53, i: 0 },
+        { text: 'ТИ ПАПУТАЛ МАЛОЛЄТКА', left: '25%', top: '6%', rot: -4, size: 'clamp(20px,3vw,46px)', blur: 5, o: 0.15, dur: 61, i: 1 }
+      ]).map(w => ({
+        text: w.text,
+        style: {
+          position: 'absolute', left: w.left, top: w.top,
+          marginTop: parseFloat(w.top) > 70 ? '-3em' : 0,
+          zIndex: 1, pointerEvents: 'none',
+          fontFamily: 'var(--font-mono)', fontSize: w.size, letterSpacing: '.16em',
+          textTransform: 'uppercase', whiteSpace: 'nowrap', color: 'var(--lav-050)',
+          transform: 'rotate(' + w.rot + 'deg)',
+          filter: 'blur(' + w.blur + 'px)',
+          opacity: w.o * (this.props.floatersOpacity ?? 1),
+          animation: 'r505-float' + (1 + w.i % 3) + ' ' + w.dur + 's ease-in-out infinite ' + (-w.i * 9) + 's'
+        }
+      })),
       // тріскачка дрейфує біля картки Роберта (правий нижній кут сітки)
       rattleStyle: {
         position: 'absolute', right: '6%', bottom: '12%',
         width: 'clamp(90px,9vw,150px)', aspectRatio: '183 / 400',
         zIndex: 1, pointerEvents: 'none',
-        background: IS(TAPE + 'float-rattle.png') + ' center / contain no-repeat',
+        background: 'url("' + TAPE + 'float-rattle.png") center / contain no-repeat',
         filter: 'blur(7px) saturate(.4) brightness(.55)',
         opacity: 0.26 * (this.props.floatersOpacity ?? 1),
         animation: 'r505-float2 41s ease-in-out infinite'
@@ -1161,7 +1294,7 @@ class Component extends DCLogic {
           // неон по контуру дискети на hover — окремим шаром поза 3D-ланцюгом
           glowStyle: {
             position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
-            background: IS(TAPE + 'disk-blank.png') + ' center / contain no-repeat',
+            background: 'url("' + TAPE + 'disk-blank.png") center / contain no-repeat',
             // та сама сила, що в касет: cyan .55 / індиго .45
             filter: 'brightness(0) drop-shadow(0 0 10px rgba(76,224,255,.55)) drop-shadow(0 0 30px rgba(124,92,255,.45))',
             // rotateY синхронно з карткою: без нього чорний силует шару
@@ -1174,7 +1307,7 @@ class Component extends DCLogic {
           // тут нічого не ламає (на гранях він розривав preserve-3d)
           shadowStyle: {
             position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
-            background: IS(TAPE + 'disk-blank.png') + ' center / contain no-repeat',
+            background: 'url("' + TAPE + 'disk-blank.png") center / contain no-repeat',
             filter: 'brightness(0) blur(' + (hotC && !open ? 12 : 9) + 'px)',
             opacity: hotC && !open ? 0.7 : 0.55,
             // тінь обертається разом із дискетою — стискається до ребра й назад
@@ -1182,7 +1315,7 @@ class Component extends DCLogic {
             transition: 'transform 560ms var(--ease-out), filter var(--dur-base) var(--ease-out), opacity var(--dur-base) var(--ease-out)'
           },
           cardStyle: {
-            position: 'relative', zIndex: 1, width: '100%', aspectRatio: '600 / 600', cursor: 'pointer',
+            position: 'relative', zIndex: 1, width: '100%', aspectRatio: '740 / 794', cursor: 'pointer',
             transformStyle: 'preserve-3d',
             // однаковий набір функцій у всіх станах — різні списки браузер
             // інтерполює дискретно, і лице блимає на кадр посеред повороту
@@ -1196,27 +1329,28 @@ class Component extends DCLogic {
           backStyle: { position: 'absolute', inset: 0, transform: 'rotateY(180deg)', backfaceVisibility: 'hidden' },
           frontArtStyle: {
             position: 'absolute', inset: 0,
-            background: IS(TAPE + (c.img || 'disk-blank.png')) + ' center / contain no-repeat'
+            background: 'url("' + TAPE + (c.img || 'disk-blank.png') + '") center / contain no-repeat'
           },
           backArtStyle: {
             position: 'absolute', inset: 0,
-            background: IS(TAPE + 'disk-back2.png') + ' center / contain no-repeat'
+            background: 'url("' + TAPE + 'disk-back2.png") center / contain no-repeat'
           },
           // не покладаємось на backface-visibility (браузер губить його в 3D-ланцюгу) —
           // грані міняються миттєво рівно на середині повороту
           // тривалість і затримка окремо — шорткат браузер нормалізує в 280ms фейд
 
-          // смужка наліпки під фото: відповідає геометрії спрайта (наліпка 90..510 / 248..576 з 600)
+          // ім'я на затемненні в низу вікна (вікно: 11.8–88.2% X, 42.6–100% Y)
           frontInkStyle: {
-            position: 'absolute', left: '15%', right: '15%',
-            top: c.onPhoto ? '80%' : '79.7%', bottom: c.onPhoto ? '6%' : '4%',
+            position: 'absolute', left: '13%', right: '13%',
+            top: '82%', bottom: '5%',
             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-            color: c.onPhoto ? '#f4f0ff' : '#241f1a', textAlign: 'center'
+            // вікно тепер темне у всіх (фото або плейсхолдер) — чорнило завжди світле
+            color: '#f4f0ff', textAlign: 'center'
           },
           nameStyle: {
             fontFamily: "'Tektur', sans-serif", fontWeight: 700, textTransform: 'uppercase',
             fontSize: 'clamp(12px,1.35vw,20px)', lineHeight: 1, letterSpacing: '.02em',
-            textShadow: c.onPhoto ? '0 2px 10px rgba(0,0,0,.7)' : 'none'
+            textShadow: '0 2px 10px rgba(0,0,0,.7)'
           },
           roleStyle: {
             marginTop: '4%', fontFamily: 'var(--font-mono)', fontSize: 'clamp(10px,.9vw,12px)',
@@ -1265,8 +1399,10 @@ class Component extends DCLogic {
         // логотип не розмиваємо й не обрізаємо — він мусить лишатись читабельним
         // кадр показуємо цілим (contain) і майже без обробки — він тепер зміст, а не підкладка
         background: readP.logo
-          ? IS(IMG + readP.photo) + ' center 38% / 52% auto no-repeat'
-          : IS(IMG + readP.photo) + ' center 34% / cover no-repeat',
+          ? 'url("' + IMG + readP.photo + '") center 38% / 52% auto no-repeat'
+          // photoZoom: cover масштабує по вужчій стороні, тож у панорамних кадрів
+          // вертикального надлишку немає і photoPos сам по собі нічого не змінює
+          : 'url("' + IMG + readP.photo + '") center ' + (readP.photoPos || '34%') + ' / ' + (readP.photoZoom || 'cover') + ' no-repeat',
         filter: photoReady
           ? (readP.logo ? 'saturate(.6) brightness(.85)' : 'saturate(.9) brightness(.94)')
           : 'blur(30px) saturate(0) brightness(.22) contrast(2.4)',
@@ -1371,7 +1507,7 @@ class Component extends DCLogic {
       ghostStyle: drag ? {
         position: 'fixed', left: drag.x, top: drag.y, width: drag.w, height: drag.h, zIndex: 400,
         transform: 'translate(-50%,-50%) rotate(-4deg) scale(' + (this.state.over ? 0.72 : 1) + ')',
-        background: IS(TAPE + (PROJECTS.find(p => p.id === drag.id) || PROJECTS[0]).img) + ' center / contain no-repeat',
+        background: 'url("' + TAPE + (PROJECTS.find(p => p.id === drag.id) || PROJECTS[0]).img + '") center / contain no-repeat',
         filter: 'drop-shadow(0 30px 50px rgba(0,0,0,.7)) drop-shadow(0 0 22px rgba(76,224,255,' + (this.state.over ? 0.55 : 0.2) + '))',
         pointerEvents: 'none', transition: 'transform 160ms var(--ease-out), filter 160ms linear'
       } : { display: 'none' }
