@@ -11,6 +11,11 @@
 <meta property="og:title" content="Room 505">
 <meta property="og:description" content="Внутрішній архів студії Room 505 — проєкти, події та команда з 2015 року.">
 <meta property="og:type" content="website">
+<meta property="og:image" content="assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="assets/og-image.png">
 <link rel="preload" as="image" href="assets/archive/tv-body-v2.webp" type="image/webp">
 </head>
 <body>
@@ -37,6 +42,12 @@
   html { scroll-snap-type: y proximity; }
   /* на тачі снап заважає: секція вища за вікно через панелі браузера */
   @media (hover: none), (max-height: 620px) { html { scroll-snap-type: none; } }
+  /* телефонам — вужча й легша копія фону (62 КБ замість 5 МБ) */
+  @media (max-width: 900px) {
+    #site-bg { background-image: url('assets/archive/site-bg-mobile.webp') !important; }
+  }
+  /* смуга касет прокручується пальцем — полоса прокрутки тут зайва */
+  [data-tape-band]::-webkit-scrollbar { display: none; }
   h1, h2, h3, h4, p, div, span, button { font-family: 'Tektur', sans-serif; }
   /* компоненти ДС читають цей токен інлайново — перевизначаємо сам токен */
   :root, body { --font-mono: 'Tektur', sans-serif; }
@@ -199,7 +210,7 @@
 </style>
 </helmet>
 
-<div style="position:relative; width:100%; min-height:100svh; background:url('assets/archive/site-bg-full.png') 50% 0 / cover no-repeat #07060B">
+<div id="site-bg" style="position:relative; width:100%; min-height:100svh; background:url('assets/archive/site-bg-full.png') 50% 0 / cover no-repeat #07060B">
 <x-import component-from-global-scope="Room505IridescentChromeDesignSystem_087d63.GrainOverlay" grain-src="assets/grain.png" hint-size="100%,100%"></x-import>
 <section style="position:relative; min-height:100svh; display:grid; place-items:center; padding:var(--space-7) 0; scroll-snap-align:start">
   <div style="position:relative; z-index:3; text-align:center; padding:0 var(--gutter); max-width:900px">
@@ -222,7 +233,7 @@
 
   <div style="{{ stageStyle }}">
 
-    <div style="{{ bandStyle }}">
+    <div data-tape-band="1" style="{{ bandStyle }}">
       <sc-for list="{{ tapesLeft }}" as="t" hint-placeholder-count="2">
         <div style="{{ t.slotStyle }}">
           <div style="{{ t.driftStyle }}">
@@ -235,7 +246,7 @@
     </div>
 
 
-    <div style="{{ monitorStyle }}">
+    <div onTouchStart="{{ onSwipeStart }}" onTouchEnd="{{ onSwipeEnd }}" style="{{ monitorStyle }}">
       <div style="{{ tvSpillStyle }}"></div>
       <div style="{{ tvContactStyle }}"></div>
       <div ref="{{ panelRef }}" style="{{ panelStyle }}">
@@ -282,7 +293,7 @@
             <div style="{{ yearBigStyle }}">{{ yearDigits }}</div>
             <div style="{{ yearTearStyle }}">{{ yearDigits }}</div>
           </div>
-          <div style="{{ osdHintStyle }}">▶ вставте касету</div>
+          <div style="{{ osdHintStyle }}">{{ osdHint }}</div>
         </div>
         </div>
       </sc-if>
@@ -297,7 +308,7 @@
     <button onClick="{{ onNextYear }}" aria-label="Наступний рік" style="{{ btnRightStyle }}" style-hover="filter:brightness(1.28) drop-shadow(0 0 8px rgba(76,224,255,.45))" style-active="transform:translateY(1px) scale(.985)"></button>
     </div>
 
-    <div style="{{ bandStyle }}">
+    <div data-tape-band="1" style="{{ bandStyleRight }}">
       <sc-for list="{{ tapesRight }}" as="t" hint-placeholder-count="2">
         <div style="{{ t.slotStyle }}">
           <div style="{{ t.driftStyle }}">
@@ -354,6 +365,12 @@
     </div>
   </div>
 </div>
+
+<footer style="position:relative; z-index:3; display:flex; align-items:center; justify-content:center; gap:clamp(10px,2vw,22px); flex-wrap:wrap; padding:clamp(18px,3vw,32px) var(--gutter); border-top:1px solid rgba(244,240,255,.14); font-family:'Tektur',sans-serif; font-size:var(--fs-label); letter-spacing:var(--ls-label); text-transform:uppercase; color:var(--lav-400)">
+  <span style="position:relative; z-index:1; color:var(--lav-050)">Room 505</span>
+  <span style="position:relative; z-index:1; opacity:.5">·</span>
+  <span style="position:relative; z-index:1">2015 — 2026</span>
+</footer>
 </div>
 
 </x-dc>
@@ -589,6 +606,7 @@ class Component extends DCLogic {
   }
   componentWillUnmount() {
     window.removeEventListener('resize', this._onResize);
+    window.removeEventListener('hashchange', this._onHash);
     clearInterval(this._scr); clearTimeout(this._fx1); clearTimeout(this._fx2);
     clearTimeout(this._ph1); clearTimeout(this._ph2); clearTimeout(this._sw);
   }
@@ -608,16 +626,47 @@ class Component extends DCLogic {
       this.forceUpdate();
     };
     im.onerror = () => { this._ready[name] = true; this.forceUpdate(); };
-    im.src = IMG + name;
+    im.src = pic(IMG + name);
   }
-  componentDidUpdate(prevProps, prevState) {
-    if (!prevState || prevState.read !== this.state.read) {
+  componentDidUpdate() {
+    // не покладаємось на prevState: другий аргумент тут не знімок стану
+    if (this._lastRead !== this.state.read) {
+      this._lastRead = this.state.read;
       const p = PROJECTS.find(x => x.id === this.state.read);
+      if (p && p.photo) this.preloadPhoto(p.photo);
+    }
+    this.writeHash();
+  }
+  // стан у хеші: посиланням можна поділитись і воно відкриє потрібну касету
+  writeHash() {
+    const h = '#' + this.state.year + (this.state.read ? '/' + this.state.read : '');
+    if (this._hash === h) return;
+    this._hash = h;
+    if (decodeURIComponent(location.hash || '') === h) return;
+    history.replaceState(null, '', location.pathname + location.search + h);
+  }
+  applyHash() {
+    const raw = decodeURIComponent(location.hash || '').replace(/^#/, '');
+    if (!raw) return;
+    const [year, id] = raw.split('/');
+    this._hash = '#' + raw;
+    const next = {};
+    if (YEARS.includes(year) && year !== this.state.year) next.year = year;
+    const p = id ? PROJECTS.find(x => x.id === id) : null;
+    const wantRead = p ? p.id : null;
+    if (wantRead !== this.state.read) next.read = wantRead;
+    if (p && !YEARS.includes(year)) next.year = p.year;
+    if (Object.keys(next).length) {
+      if (next.read) { next.hot = null; next.tilt = {}; next.drag = null; next.over = false; }
+      this.setState(next);
       if (p && p.photo) this.preloadPhoto(p.photo);
     }
   }
   componentDidMount() {
     this.trackWidth();
+    this.applyHash();
+    this._onHash = () => this.applyHash();
+    window.addEventListener('hashchange', this._onHash);
     // передзавантаження кадрів: до першого драгу вони вже в кеші
     this._ready = {};
     PROJECTS.filter(p => p.photo).forEach(p => {
@@ -628,10 +677,10 @@ class Component extends DCLogic {
         this._hue[p.photo] = this.dominant(im);
         this.forceUpdate();
       };
-      im.src = IMG + p.photo;
+      im.src = pic(IMG + p.photo);
     });
     // спрайти касет теж: без цього касета «спавнилась» посеред анімації прильоту
-    PROJECTS.forEach(p => { const im = new Image(); im.src = TAPE + p.img; });
+    PROJECTS.forEach(p => { const im = new Image(); im.src = pic(TAPE + p.img); });
   }
   // заміна касети на льоту: старий кадр скручується вгору, спалах шуму, новий викатується знизу
   loadTape(id) {
@@ -702,6 +751,7 @@ class Component extends DCLogic {
     // ширина вікна керує розкладкою (телефон і вузьке вікно на ПК — однаково)
     const vw = this.state.vw || (typeof window !== 'undefined' ? window.innerWidth : 1440);
     const narrow = vw < 900;
+    const touch = typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches;
     const readP = PROJECTS.find(p => p.id === this.state.read) || null;
 
     const years = YEARS.map(y => ({ y, label: y })).map(o => {
@@ -827,6 +877,7 @@ class Component extends DCLogic {
           position: 'relative',
           flex: narrow ? '0 0 clamp(96px,26vw,150px)' : '0 0 auto',
           width: narrow ? 'clamp(96px,26vw,150px)' : '72%',
+          scrollSnapAlign: narrow ? 'center' : 'none',
           transform: 'translateX(' + (Number(sc.nudge) * 0.4).toFixed(1) + 'px)',
           // 200 > max(sc.z)=118 — інакше наведена касета лягала ПІД сусідів
           perspective: '1100px', zIndex: hot ? 200 : sc.z,
@@ -884,8 +935,8 @@ class Component extends DCLogic {
     return {
       years, tapes,
       // колонки читаються як текст: ліва — перша половина зверху вниз, права — решта
-      tapesLeft: tapes.slice(0, Math.ceil(tapes.length / 2)),
-      tapesRight: tapes.slice(Math.ceil(tapes.length / 2)),
+      tapesLeft: narrow ? tapes : tapes.slice(0, Math.ceil(tapes.length / 2)),
+      tapesRight: narrow ? [] : tapes.slice(Math.ceil(tapes.length / 2)),
       panelRef: this.panel,
       read: readP ? {
         year: readP.year, title: readP.title, struck: readP.struck || '', people: readP.people, text: readP.text,
@@ -943,10 +994,17 @@ class Component extends DCLogic {
         gap: narrow ? 'var(--space-5)' : 'clamp(8px,1.4vw,28px)', overflowX: 'clip'
       },
       // смуга ширша за касету на запас під поворот і hover-scale; сама касета — 72% смуги
+      // на телефоні всі касети в одній смузі з горизонтальною прокруткою:
+      // рік із шістьма касетами не влазив у ширину екрана
       bandStyle: narrow ? {
         order: 2, width: '100%', position: 'relative',
-        display: 'flex', flexDirection: 'row', justifyContent: 'center',
-        alignItems: 'flex-start', gap: 'clamp(6px,2vw,18px)', flexWrap: 'wrap'
+        display: 'flex', flexDirection: 'row', justifyContent: 'flex-start',
+        alignItems: 'flex-start', gap: 'clamp(10px,3vw,20px)', flexWrap: 'nowrap',
+        overflowX: 'auto', overflowY: 'hidden',
+        scrollSnapType: 'x proximity', WebkitOverflowScrolling: 'touch',
+        scrollbarWidth: 'none', padding: '4px clamp(12px,8vw,60px) 10px',
+        // дрейф касет ±45px по X не має рахуватись у скрол
+        overscrollBehaviorX: 'contain'
       } : {
         flex: '0 0 clamp(104px,11vw,190px)', position: 'relative',
         // фіксована висота смуги тримає висоту сцени сталою за будь-якого числа
@@ -954,6 +1012,26 @@ class Component extends DCLogic {
         height: 'min(64svh, 600px)',
         display: 'flex', flexDirection: 'column', justifyContent: 'space-around',
         alignItems: 'center', gap: 'var(--space-2)'
+      },
+      // друга смуга на телефоні порожня — усі касети в першій
+      bandStyleRight: narrow ? { display: 'none' } : {
+        flex: '0 0 clamp(104px,11vw,190px)', position: 'relative',
+        height: 'min(64svh, 600px)',
+        display: 'flex', flexDirection: 'column', justifyContent: 'space-around',
+        alignItems: 'center', gap: 'var(--space-2)'
+      },
+      // свайп по корпусу ТВ перемикає рік — стрілки на телефоні дрібні
+      onSwipeStart: e => {
+        const t = e.touches && e.touches[0];
+        this._sw0 = t ? { x: t.clientX, y: t.clientY, t: Date.now() } : null;
+      },
+      onSwipeEnd: e => {
+        const s = this._sw0; this._sw0 = null;
+        const t = e.changedTouches && e.changedTouches[0];
+        if (!s || !t || Date.now() - s.t > 700) return;
+        const dx = t.clientX - s.x, dy = t.clientY - s.y;
+        if (Math.abs(dx) < 46 || Math.abs(dx) < Math.abs(dy) * 1.4) return;
+        this.stepYear(dx < 0 ? 1 : -1);
       },
       monitorStyle: {
         // ширину обмежуємо і висотою вікна — інакше нижня рамка з кнопками йде за фолд
@@ -1044,7 +1122,9 @@ class Component extends DCLogic {
         transition: 'opacity var(--dur-base) var(--ease-out)'
       },
       screenInnerStyle: {
-        position: 'absolute', inset: 0, padding: 'clamp(14px,3.2%,40px)'
+        position: 'absolute', inset: 0,
+        // на телефоні екран ~300px: віддаємо тексту всю площу, лишаючи вузькі поля
+        padding: narrow ? '10px 12px 12px' : 'clamp(14px,3.2%,40px)'
       },
       btnLeftStyle: {
         position: 'absolute', left: '61.60%', top: '86.05%', width: '6.41%', height: '8.70%',
@@ -1069,6 +1149,8 @@ class Component extends DCLogic {
         // тільно проявлення, без вертикального руху — рік не мусить «виїжджати»
         animation: (swap === 'in' || phase === 'in') ? 'r505-read 300ms var(--ease-out) both' : 'none'
       },
+      // на тачі касета відкривається тапом, а не перетягуванням
+      osdHint: touch ? '▶ торкніться касети' : '▶ вставте касету',
       // службовий рядок у стилі меню плеєра — блимає, як справжній OSD
       osdHintStyle: {
         marginTop: 'var(--space-5)', fontFamily: 'var(--font-mono)',
@@ -1446,9 +1528,9 @@ class Component extends DCLogic {
       readInkStyle: (readP && readP.photo) ? {
         position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column',
         // текст притиснутий до низу; спейсер зверху гарантує, що верх кадру чистий
-        height: '100%', maxWidth: '92%', justifyContent: 'flex-end', paddingBottom: '1%',
+        height: '100%', maxWidth: narrow ? '100%' : '92%', justifyContent: 'flex-end', paddingBottom: '1%',
         gap: 0
-      } : { position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', height: '100%', maxWidth: '84%' },
+      } : { position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', height: '100%', maxWidth: narrow ? '100%' : '84%' },
       readStyle: {
         animation: swap === 'out'
           ? 'r505-rollout 240ms var(--ease-in-out) both'
@@ -1463,13 +1545,15 @@ class Component extends DCLogic {
       titleStyle: {
         marginTop: 6, fontFamily: "'Tektur',sans-serif",
         fontWeight: 700, textTransform: 'uppercase',
-        fontSize: 'clamp(1.15rem,2.5vw,2rem)', lineHeight: 1.04, letterSpacing: '.01em',
+        fontSize: narrow ? 'clamp(17px,5vw,26px)' : 'clamp(1.15rem,2.5vw,2rem)',
+        lineHeight: 1.04, letterSpacing: '.01em',
         color: '#eaf6ff', textShadow: '0 0 22px rgba(76,224,255,.28)'
       },
       rowsStyle: { marginTop: (readP && readP.photo) ? 0 : 12 },
       metaLineStyle: {
-        marginTop: 8, fontFamily: "'Tektur',sans-serif", fontSize: 'var(--fs-label)',
-        letterSpacing: 'var(--ls-label)', textTransform: 'uppercase',
+        marginTop: narrow ? 5 : 8, fontFamily: "'Tektur',sans-serif",
+        fontSize: narrow ? 11 : 'var(--fs-label)',
+        letterSpacing: narrow ? '.1em' : 'var(--ls-label)', textTransform: 'uppercase',
         color: 'var(--spectrum-cyan)'
       },
       keyStyle: {
@@ -1478,15 +1562,16 @@ class Component extends DCLogic {
       },
       valStyle: { fontSize: 'clamp(12px,1.05vw,14px)', lineHeight: 1.4, color: 'var(--lav-050)' },
       textStyle: {
-        margin: '10px 0 0', maxWidth: (readP && readP.photo) ? '78%' : '100%',
-        fontSize: 'clamp(12px,1.05vw,14px)', lineHeight: 1.55,
+        margin: narrow ? '7px 0 0' : '10px 0 0',
+        maxWidth: narrow ? '100%' : ((readP && readP.photo) ? '78%' : '100%'),
+        fontSize: narrow ? 13 : 'clamp(12px,1.05vw,14px)', lineHeight: narrow ? 1.45 : 1.55,
         color: 'var(--lav-050)', textWrap: 'pretty'
       },
       crewStyle: {
-        marginTop: (readP && readP.photo) ? 10 : 'auto',
-        paddingTop: 10, borderTop: '1px solid rgba(244,240,255,.16)',
-        fontFamily: "'Tektur',sans-serif", fontSize: 'var(--fs-label)',
-        letterSpacing: 'var(--ls-label)', textTransform: 'uppercase', color: 'var(--lav-050)'
+        marginTop: (readP && readP.photo) ? (narrow ? 7 : 10) : 'auto',
+        paddingTop: narrow ? 7 : 10, borderTop: '1px solid rgba(244,240,255,.16)',
+        fontFamily: "'Tektur',sans-serif", fontSize: narrow ? 11 : 'var(--fs-label)',
+        letterSpacing: narrow ? '.1em' : 'var(--ls-label)', textTransform: 'uppercase', color: 'var(--lav-050)'
       },
       clearStyle: {
         // z-index вище за корпус (3) і осторонь стрілок року, інакше вона під пластиком і краде їм клік
