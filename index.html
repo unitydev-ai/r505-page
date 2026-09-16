@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
-<title>Архів Room 505</title>
+<title>Room 505</title>
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <link rel="apple-touch-icon" href="assets/favicon.png">
 <meta name="description" content="Внутрішній архів студії Room 505 — проєкти, події та команда з 2015 року.">
-<meta property="og:title" content="Архів Room 505">
+<meta property="og:title" content="Room 505">
 <meta property="og:description" content="Внутрішній архів студії Room 505 — проєкти, події та команда з 2015 року.">
 <meta property="og:type" content="website">
 <link rel="preload" as="image" href="assets/archive/tv-body-v2.webp" type="image/webp">
@@ -361,6 +361,9 @@
 const IMG = 'assets/archive/';
 // спрайти касет — зменшені до 800px копії; оригінали лишаються в assets/archive/
 const TAPE = 'assets/tapes/';
+// webp там, де браузер його тягне: ті самі файли в 6-15 разів легші, png лишається фолбеком
+const WEBP = (() => { try { const c = document.createElement('canvas'); c.width = c.height = 1; return c.toDataURL('image/webp').indexOf('data:image/webp') === 0; } catch (e) { return false; } })();
+const pic = p => WEBP ? p.replace(/\.(png|jpg|jpeg)$/i, '.webp') : p;
 const YEARS = ['2015','2016','2017','2018','2019','2020','2021','2022'];
 
 // Тексти чорнові — заміню, коли будуть справжні описи.
@@ -852,7 +855,7 @@ class Component extends DCLogic {
         },
         artStyle: {
           width: '100%', aspectRatio: '1536 / 2752',
-          background: 'url("' + TAPE + p.img + '") center / contain no-repeat',
+          background: 'url("' + pic(TAPE + p.img) + '") center / contain no-repeat',
           filter: hot
             ? 'drop-shadow(0 24px 40px rgba(0,0,0,.65)) drop-shadow(0 0 10px rgba(76,224,255,.55)) drop-shadow(0 0 28px rgba(124,92,255,.42))'
             : (isRead
@@ -969,7 +972,7 @@ class Component extends DCLogic {
       tvSpillStyle: {
         position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
         // силует без внутрішніх отворів — інакше світились би прорізи під кнопки й екран
-        background: 'url("' + IMG + 'tv-silhouette.png") center / contain no-repeat',
+        background: 'url("' + pic(IMG + 'tv-silhouette.png') + '") center / contain no-repeat',
         opacity: (this.props.glowStrength ?? 1) * 0.85,
         filter: (() => {
           const g = this.props.glowSize ?? 30;
@@ -1005,7 +1008,7 @@ class Component extends DCLogic {
       // тому має справжню форму силуету (плінтус, ніжки), а не еліпс
       tvContactStyle: {
         position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
-        background: 'url("' + IMG + 'tv-body-v2.png") center / contain no-repeat',
+        background: 'url("' + pic(IMG + 'tv-body-v2.png') + '") center / contain no-repeat',
         transformOrigin: '50% 100%',
         transform: 'scaleY(.075) translateY(30%)',
         filter: 'brightness(0) blur(11px)',
@@ -1017,7 +1020,7 @@ class Component extends DCLogic {
       // корпус лежить ПОВЕРХ екрана — у нього справжні прорізи
       bodyStyle: {
         position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 3,
-        background: 'url("' + IMG + 'tv-body-v2.png") center / contain no-repeat'
+        background: 'url("' + pic(IMG + 'tv-body-v2.png') + '") center / contain no-repeat'
       },
       // прорізи, зміряні по альфі спрайта
       panelStyle: {
@@ -1028,11 +1031,11 @@ class Component extends DCLogic {
       gateStyle: {
         position: 'absolute', left: '15.05%', top: '86.72%', width: '33.84%', height: '6.23%',
         zIndex: 4, pointerEvents: 'none',
-        background: 'url("' + IMG + 'tv-gate.png") center / 100% 100% no-repeat'
+        background: 'url("' + pic(IMG + 'tv-gate.png') + '") center / 100% 100% no-repeat'
       },
       screenBaseStyle: {
         position: 'absolute', inset: 0,
-        background: 'url("' + IMG + 'tv2-screen.png") center / cover no-repeat #1b1b1e'
+        background: 'url("' + pic(IMG + 'tv2-screen.png') + '") center / cover no-repeat #1b1b1e'
       },
       screenGlowStyle: {
         position: 'absolute', inset: 0, pointerEvents: 'none',
@@ -1046,13 +1049,13 @@ class Component extends DCLogic {
       btnLeftStyle: {
         position: 'absolute', left: '61.60%', top: '86.05%', width: '6.41%', height: '8.70%',
         zIndex: 4, border: 0, padding: 0, cursor: 'pointer', borderRadius: 4,
-        background: 'url("' + IMG + 'tv2-btn-left.png") center / contain no-repeat',
+        background: 'url("' + pic(IMG + 'tv2-btn-left.png') + '") center / contain no-repeat',
         filter: 'brightness(1)', transition: 'filter var(--dur-fast) var(--ease-out), transform 90ms var(--ease-out)'
       },
       btnRightStyle: {
         position: 'absolute', left: '72.41%', top: '85.97%', width: '6.41%', height: '8.70%',
         zIndex: 4, border: 0, padding: 0, cursor: 'pointer', borderRadius: 4,
-        background: 'url("' + IMG + 'tv2-btn-right.png") center / contain no-repeat',
+        background: 'url("' + pic(IMG + 'tv2-btn-right.png') + '") center / contain no-repeat',
         filter: 'brightness(1)', transition: 'filter var(--dur-fast) var(--ease-out), transform 90ms var(--ease-out)'
       },
       // скрембл випадковий, але після нього одразу цільовий рік — без відкату на старий
@@ -1113,7 +1116,7 @@ class Component extends DCLogic {
           : (readP ? (readP.photo && !photoReady ? 0.62 : 0)
                    : (fx ? 0.42 : 0.2)),
         transition: 'opacity 900ms var(--ease-out)',
-        background: 'url("' + IMG + 'tv-static.png") 0 0 repeat',
+        background: 'url("' + pic(IMG + 'tv-static.png') + '") 0 0 repeat',
         backgroundSize: '300px 300px',
         animation: 'r505-static .7s steps(1,end) infinite',
         mixBlendMode: 'screen',
@@ -1137,7 +1140,7 @@ class Component extends DCLogic {
       // зворотний до проявлення: кадр іде назад у шум — блюр, контраст, темніє
       photoOutStyle: this.state.outPhoto ? {
         position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
-        background: 'url("' + IMG + this.state.outPhoto + '") center / cover no-repeat',
+        background: 'url("' + pic(IMG + this.state.outPhoto) + '") center / cover no-repeat',
         animation: 'r505-photoout 620ms var(--ease-in-out) both'
       } : { display: 'none' },
       // розмиті касети, що повільно дрейфують у глибині сцени
@@ -1146,7 +1149,7 @@ class Component extends DCLogic {
           position: 'absolute', left: f.x + '%', top: f.y + '%',
           width: f.w + 'px', aspectRatio: '1536 / 2752',
           zIndex: 1, pointerEvents: 'none',
-          background: 'url("' + TAPE + f.img + '") center / contain no-repeat',
+          background: 'url("' + pic(TAPE + f.img) + '") center / contain no-repeat',
           filter: 'blur(' + f.blur + 'px) saturate(.35) brightness(.5)',
           opacity: f.o * (this.props.floatersOpacity ?? 1),
           animation: 'r505-float' + (1 + i % 3) + ' ' + f.dur + 's ease-in-out infinite ' + (-i * 5) + 's'
@@ -1162,7 +1165,7 @@ class Component extends DCLogic {
         position: 'absolute', left: '32%', top: '8%',
         width: 'clamp(130px,15vw,280px)', aspectRatio: '421 / 520',
         zIndex: 1, pointerEvents: 'none',
-        background: 'url("' + TAPE + 'float-px.png") center / contain no-repeat',
+        background: 'url("' + pic(TAPE + 'float-px.png') + '") center / contain no-repeat',
         filter: 'blur(8px) saturate(.35) brightness(.55)',
         opacity: 0.26 * (this.props.floatersOpacity ?? 1),
         transform: 'rotate(-5deg)',
@@ -1172,7 +1175,7 @@ class Component extends DCLogic {
         position: 'absolute', right: '18%', top: '16%',
         width: 'clamp(120px,13vw,240px)', aspectRatio: '407 / 520',
         zIndex: 1, pointerEvents: 'none',
-        background: 'url("' + TAPE + 'float-face.png") center / contain no-repeat',
+        background: 'url("' + pic(TAPE + 'float-face.png') + '") center / contain no-repeat',
         filter: 'blur(8px) saturate(.35) brightness(.5)',
         opacity: 0.3 * (this.props.floatersOpacity ?? 1),
         animation: 'r505-float1 51s ease-in-out infinite -20s'
@@ -1182,7 +1185,7 @@ class Component extends DCLogic {
         position: 'absolute', left: '13%', bottom: '2%',
         width: 'clamp(150px,17vw,320px)', aspectRatio: '503 / 520',
         zIndex: 1, pointerEvents: 'none',
-        background: 'url("' + TAPE + 'float-char.png") center / contain no-repeat',
+        background: 'url("' + pic(TAPE + 'float-char.png') + '") center / contain no-repeat',
         filter: 'blur(7px) saturate(.4) brightness(.55)',
         opacity: 0.24 * (this.props.floatersOpacity ?? 1),
         animation: 'r505-float3 55s ease-in-out infinite -12s'
@@ -1198,7 +1201,7 @@ class Component extends DCLogic {
           position: 'absolute', left: d.left, top: d.top,
           width: 'clamp(' + (d.w * 7) + 'px,' + d.w + 'vw,' + (d.w * 14) + 'px)',
           aspectRatio: '740 / 794', zIndex: 1, pointerEvents: 'none',
-          background: 'url("' + TAPE + 'disk-blank.png") center / contain no-repeat',
+          background: 'url("' + pic(TAPE + 'disk-blank.png') + '") center / contain no-repeat',
           transform: 'rotate(' + d.rot + 'deg)',
           filter: 'blur(' + d.blur + 'px) saturate(.35) brightness(.5)',
           opacity: d.o * (this.props.floatersOpacity ?? 1),
@@ -1255,7 +1258,7 @@ class Component extends DCLogic {
         position: 'absolute', right: '6%', bottom: '12%',
         width: 'clamp(90px,9vw,150px)', aspectRatio: '183 / 400',
         zIndex: 1, pointerEvents: 'none',
-        background: 'url("' + TAPE + 'float-rattle.png") center / contain no-repeat',
+        background: 'url("' + pic(TAPE + 'float-rattle.png') + '") center / contain no-repeat',
         filter: 'blur(7px) saturate(.4) brightness(.55)',
         opacity: 0.26 * (this.props.floatersOpacity ?? 1),
         animation: 'r505-float2 41s ease-in-out infinite'
@@ -1294,7 +1297,7 @@ class Component extends DCLogic {
           // неон по контуру дискети на hover — окремим шаром поза 3D-ланцюгом
           glowStyle: {
             position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
-            background: 'url("' + TAPE + 'disk-blank.png") center / contain no-repeat',
+            background: 'url("' + pic(TAPE + 'disk-blank.png') + '") center / contain no-repeat',
             // та сама сила, що в касет: cyan .55 / індиго .45
             filter: 'brightness(0) drop-shadow(0 0 10px rgba(76,224,255,.55)) drop-shadow(0 0 30px rgba(124,92,255,.45))',
             // rotateY синхронно з карткою: без нього чорний силует шару
@@ -1307,7 +1310,7 @@ class Component extends DCLogic {
           // тут нічого не ламає (на гранях він розривав preserve-3d)
           shadowStyle: {
             position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
-            background: 'url("' + TAPE + 'disk-blank.png") center / contain no-repeat',
+            background: 'url("' + pic(TAPE + 'disk-blank.png') + '") center / contain no-repeat',
             filter: 'brightness(0) blur(' + (hotC && !open ? 12 : 9) + 'px)',
             opacity: hotC && !open ? 0.7 : 0.55,
             // тінь обертається разом із дискетою — стискається до ребра й назад
@@ -1329,11 +1332,11 @@ class Component extends DCLogic {
           backStyle: { position: 'absolute', inset: 0, transform: 'rotateY(180deg)', backfaceVisibility: 'hidden' },
           frontArtStyle: {
             position: 'absolute', inset: 0,
-            background: 'url("' + TAPE + (c.img || 'disk-blank.png') + '") center / contain no-repeat'
+            background: 'url("' + pic(TAPE + (c.img || 'disk-blank.png')) + '") center / contain no-repeat'
           },
           backArtStyle: {
             position: 'absolute', inset: 0,
-            background: 'url("' + TAPE + 'disk-back2.png") center / contain no-repeat'
+            background: 'url("' + pic(TAPE + 'disk-back2.png') + '") center / contain no-repeat'
           },
           // не покладаємось на backface-visibility (браузер губить його в 3D-ланцюгу) —
           // грані міняються миттєво рівно на середині повороту
@@ -1399,10 +1402,10 @@ class Component extends DCLogic {
         // логотип не розмиваємо й не обрізаємо — він мусить лишатись читабельним
         // кадр показуємо цілим (contain) і майже без обробки — він тепер зміст, а не підкладка
         background: readP.logo
-          ? 'url("' + IMG + readP.photo + '") center 38% / 52% auto no-repeat'
+          ? 'url("' + pic(IMG + readP.photo) + '") center 38% / 52% auto no-repeat'
           // photoZoom: cover масштабує по вужчій стороні, тож у панорамних кадрів
           // вертикального надлишку немає і photoPos сам по собі нічого не змінює
-          : 'url("' + IMG + readP.photo + '") center ' + (readP.photoPos || '34%') + ' / ' + (readP.photoZoom || 'cover') + ' no-repeat',
+          : 'url("' + pic(IMG + readP.photo) + '") center ' + (readP.photoPos || '34%') + ' / ' + (readP.photoZoom || 'cover') + ' no-repeat',
         filter: photoReady
           ? (readP.logo ? 'saturate(.6) brightness(.85)' : 'saturate(.9) brightness(.94)')
           : 'blur(30px) saturate(0) brightness(.22) contrast(2.4)',
@@ -1507,7 +1510,7 @@ class Component extends DCLogic {
       ghostStyle: drag ? {
         position: 'fixed', left: drag.x, top: drag.y, width: drag.w, height: drag.h, zIndex: 400,
         transform: 'translate(-50%,-50%) rotate(-4deg) scale(' + (this.state.over ? 0.72 : 1) + ')',
-        background: 'url("' + TAPE + (PROJECTS.find(p => p.id === drag.id) || PROJECTS[0]).img + '") center / contain no-repeat',
+        background: 'url("' + pic(TAPE + (PROJECTS.find(p => p.id === drag.id) || PROJECTS[0]).img) + '") center / contain no-repeat',
         filter: 'drop-shadow(0 30px 50px rgba(0,0,0,.7)) drop-shadow(0 0 22px rgba(76,224,255,' + (this.state.over ? 0.55 : 0.2) + '))',
         pointerEvents: 'none', transition: 'transform 160ms var(--ease-out), filter 160ms linear'
       } : { display: 'none' }
