@@ -11,11 +11,11 @@
 <meta property="og:title" content="Room 505">
 <meta property="og:description" content="Внутрішній архів студії Room 505 — проєкти, події та команда з 2015 року.">
 <meta property="og:type" content="website">
-<meta property="og:image" content="assets/og-image.jpg">
+<meta property="og:image" content="assets/og-cover-v2.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="assets/og-image.jpg">
+<meta name="twitter:image" content="assets/og-cover-v2.jpg">
 <link rel="preload" as="image" href="assets/archive/tv-body-v2.webp" type="image/webp">
 </head>
 <body>
@@ -97,6 +97,9 @@
   }
   @keyframes r505-osdblink { 0%,64% { opacity: .78 } 65%,100% { opacity: .28 } }
   @keyframes r505-drift { 0%,100% { transform: translate3d(0,0,0) } 33% { transform: translate3d(6px,-13px,0) } 66% { transform: translate3d(-5px,9px,0) } }
+  /* у смузі з прокруткою вертикальний дрейф виводив касету за рамку контейнера
+     і вона обрізалась — на телефоні лишаємо лише горизонтальний хід */
+  @keyframes r505-drift-flat { 0%,100% { transform: translate3d(0,0,0) } 33% { transform: translate3d(6px,0,0) } 66% { transform: translate3d(-5px,0,0) } }
   /* VFX перемикання каналу */
   @keyframes r505-crtin {
     0% { opacity: 0; transform: scaleY(.015) scaleX(1.04) }
@@ -236,11 +239,11 @@
 </helmet>
 
 <div id="site-bg" style="position:relative; width:100%; min-height:100svh; background:linear-gradient(180deg, #564171 0%, #52435f 6%, #241c30 12%, #0a0814 20%, #232235 30%, #373166 36%, #2b2450 44%, #151230 60%, #100e22 78%, #0b0916 100%) no-repeat #07060B">
-<div ref="{{ bgNoiseRef }}" style="position:absolute; inset:0; z-index:5; pointer-events:none; opacity:.2; background:url('assets/archive/tv-static.webp') 0 0 repeat; background-size:300px 300px; animation:r505-static .7s steps(1,end) infinite; mix-blend-mode:screen; filter:sepia(1) hue-rotate(212deg) saturate(3.4) brightness(.72); transition:opacity 700ms var(--ease-out)"></div>
-<div id="site-bg-layer" ref="{{ bgRef }}" style="position:absolute; inset:0; z-index:0; pointer-events:none; opacity:0; filter:blur(16px) saturate(.35) brightness(.5); transform:scale(1.035); transition:opacity 1100ms var(--ease-out), filter 1100ms var(--ease-out), transform 1100ms var(--ease-out); will-change:opacity,filter,transform; background:url('assets/archive/site-bg-full.png') 50% 0 / cover no-repeat"></div>
+<div ref="{{ bgNoiseRef }}" style="position:absolute; inset:0; z-index:5; pointer-events:none; opacity:.2; background:url('assets/archive/tv-static.webp') 0 0 repeat; background-size:300px 300px; animation:r505-static .7s steps(1,end) infinite; mix-blend-mode:screen; filter:sepia(1) hue-rotate(212deg) saturate(3.4) brightness(.72); transition:opacity 520ms var(--ease-out)"></div>
+<div id="site-bg-layer" ref="{{ bgRef }}" style="position:absolute; inset:0; z-index:0; pointer-events:none; opacity:0; filter:blur(16px) saturate(.35) brightness(.5); transform:scale(1.035); transition:opacity 520ms var(--ease-out), filter 520ms var(--ease-out), transform 520ms var(--ease-out); will-change:opacity,filter,transform; background:url('assets/archive/site-bg-full.png') 50% 0 / cover no-repeat"></div>
 <x-import component-from-global-scope="Room505IridescentChromeDesignSystem_087d63.GrainOverlay" grain-src="assets/grain.png" hint-size="100%,100%"></x-import>
 <section style="position:relative; min-height:100svh; display:grid; place-items:center; padding:var(--space-7) 0; scroll-snap-align:start">
-  <div ref="{{ heroRef }}" style="position:relative; z-index:3; text-align:center; padding:0 var(--gutter); max-width:900px; opacity:0; filter:blur(14px); transition:opacity 900ms var(--ease-out), filter 900ms var(--ease-out); will-change:opacity,filter">
+  <div ref="{{ heroRef }}" style="position:relative; z-index:3; text-align:center; padding:0 var(--gutter); max-width:900px; opacity:0; filter:blur(14px); transition:opacity 600ms var(--ease-out), filter 600ms var(--ease-out); will-change:opacity,filter">
     <x-import component-from-global-scope="Room505IridescentChromeDesignSystem_087d63.SlashLabel" tone="secondary" hint-size="auto,14px">Внутрішній архів студії</x-import>
     <h1 data-hero-bloom="1" style="font-family:'Tektur',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.01em; line-height:1.04; color:var(--lav-050); margin:var(--space-5) 0 0; font-size:clamp(3rem,7vw,6.5rem); text-shadow:0 0 18px rgba(244,240,255,.34), 0 0 46px rgba(124,92,255,.28); animation:r505-glowbreathe 7s var(--ease-in-out) infinite">Room 505</h1>
     <p style="margin:var(--space-5) auto 0; max-width:520px; font-size:var(--fs-body); color:var(--lav-200); line-height:1.75; text-wrap:pretty; display:flex; align-items:center; justify-content:center; gap:.7em"><span style="letter-spacing:.18em">2015</span><span style="width:3.4em; height:2px; border-radius:2px; background:var(--lav-050); box-shadow:0 0 10px rgba(244,240,255,.45)"></span><span style="display:flex; color:var(--lav-050); filter:drop-shadow(0 0 10px rgba(244,240,255,.4))"><x-import component-from-global-scope="Room505IridescentChromeDesignSystem_087d63.Icon" name="infinity" size="30" hint-size="30px,30px"></x-import></span></p>
@@ -740,18 +743,17 @@ class Component extends DCLogic {
           h.style.transition = 'none';
           this._heroReady = true;
           if (this._onHeroScroll) this._onHeroScroll();
-        }, 950);
+        }, 650);
       } else {
         this._heroReady = true;
       }
       const n = this.bgNoise && this.bgNoise.current;
       if (!n) return;
+      // шум гасне одночасно з проявленням кадру: тривалість ефекту визначає
+      // подія завантаження, а не фіксована пауза після неї
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const hold = reduce ? 0 : 900;
-      setTimeout(() => {
-        n.style.opacity = '0';
-        setTimeout(() => { n.style.animation = 'none'; n.style.display = 'none'; }, reduce ? 0 : 760);
-      }, hold);
+      n.style.opacity = '0';
+      setTimeout(() => { n.style.animation = 'none'; n.style.display = 'none'; }, reduce ? 0 : 560);
     };
     const src = window.matchMedia('(max-width: 900px)').matches
       ? IMG + 'site-bg-mobile.webp' : IMG + 'site-bg-full.png';
@@ -1010,7 +1012,7 @@ class Component extends DCLogic {
         },
         driftStyle: {
           // не 'none': вимкнення анімації скидало transform і касета підстрибувала
-          animation: 'r505-drift ' + sc.dur + 's ease-in-out ' + sc.delay + 's infinite',
+          animation: (narrow ? 'r505-drift-flat ' : 'r505-drift ') + sc.dur + 's ease-in-out ' + sc.delay + 's infinite',
           // дрейф стоїть, поки касета летить — інакше два рухи накладаються
           animationPlayState: (hot || isDragging || phase) ? 'paused' : 'running',
           willChange: 'transform'
