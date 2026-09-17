@@ -11,11 +11,11 @@
 <meta property="og:title" content="Room 505">
 <meta property="og:description" content="Внутрішній архів студії Room 505 — проєкти, події та команда з 2015 року.">
 <meta property="og:type" content="website">
-<meta property="og:image" content="assets/og-image.png">
+<meta property="og:image" content="assets/og-image.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="assets/og-image.png">
+<meta name="twitter:image" content="assets/og-image.jpg">
 <link rel="preload" as="image" href="assets/archive/tv-body-v2.webp" type="image/webp">
 </head>
 <body>
@@ -36,7 +36,10 @@
 <style>
   html { background: #07060B; }
   /* одне зображення на всю висоту документа — і під шапкою, і під тілом */
-  body { margin: 0; padding: 0; background: #07060B; font-family: 'Tektur', sans-serif; }
+  /* колір тексту заданий тут, а не лише токеном: таблиці ДС підключаються
+     асинхронно, і до їх приходу var(--lav-*) не існує — текст малювався чорним */
+  body { margin: 0; padding: 0; background: #07060B; font-family: 'Tektur', sans-serif; color: #f4f0ff; }
+  :root { --lav-050: #f4f0ff; --lav-200: #d9d2f0; --lav-400: #a89ec9; }
   html, body { overflow-x: clip; }
   /* дві повноекранні частини: шапка і архів */
   html { scroll-snap-type: y proximity; }
@@ -44,7 +47,11 @@
   @media (hover: none), (max-height: 620px) { html { scroll-snap-type: none; } }
   /* телефонам — вужча й легша копія фону (62 КБ замість 5 МБ) */
   @media (max-width: 900px) {
-    #site-bg { background-image: url('assets/archive/site-bg-mobile.webp') !important; }
+    #site-bg-layer { background-image: url('assets/archive/site-bg-mobile.webp') !important; }
+  }
+  /* фон проявляється переходом, коли кадр справді завантажився */
+  @media (prefers-reduced-motion: reduce) {
+    #site-bg-layer { transition: none !important; }
   }
   /* смуга касет прокручується пальцем — полоса прокрутки тут зайва */
   [data-tape-band]::-webkit-scrollbar { display: none; }
@@ -207,15 +214,35 @@
     100% { opacity: 1; transform: none }
   }
   @keyframes r505-breathe { 0%,100% { opacity: .92 } 50% { opacity: 1 } }
+  /* заголовок шапки тихо дихає світінням — сторінка не виглядає скріншотом */
+  @keyframes r505-glowbreathe {
+    0%, 100% { text-shadow: 0 0 14px rgba(244,240,255,.24), 0 0 38px rgba(124,92,255,.2) }
+    50% { text-shadow: 0 0 22px rgba(244,240,255,.4), 0 0 58px rgba(124,92,255,.34) }
+  }
+  /* заголовок ловить трекінг, як щойно вставлена касета: канали розлітаються
+     по горизонталі й зводяться — без шуму, один раз за сесію */
+  @keyframes r505-track {
+    0%   { transform: translateX(-9px); text-shadow: 7px 0 0 rgba(76,224,255,.75), -7px 0 0 rgba(239,78,160,.7) }
+    18%  { transform: translateX(7px);  text-shadow: -6px 0 0 rgba(76,224,255,.7), 6px 0 0 rgba(239,78,160,.65) }
+    34%  { transform: translateX(-4px); text-shadow: 4px 0 0 rgba(76,224,255,.6), -4px 0 0 rgba(239,78,160,.55) }
+    52%  { transform: translateX(3px);  text-shadow: -2.5px 0 0 rgba(76,224,255,.45), 2.5px 0 0 rgba(239,78,160,.4) }
+    72%  { transform: translateX(-1.5px); text-shadow: 1px 0 0 rgba(76,224,255,.3), -1px 0 0 rgba(239,78,160,.26) }
+    100% { transform: none; text-shadow: 0 0 18px rgba(244,240,255,.34), 0 0 46px rgba(124,92,255,.28) }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    [data-hero-bloom] { animation: none !important; }
+  }
 </style>
 </helmet>
 
-<div id="site-bg" style="position:relative; width:100%; min-height:100svh; background:url('assets/archive/site-bg-full.png') 50% 0 / cover no-repeat #07060B">
+<div id="site-bg" style="position:relative; width:100%; min-height:100svh; background:linear-gradient(180deg, #564171 0%, #52435f 6%, #241c30 12%, #0a0814 20%, #232235 30%, #373166 36%, #2b2450 44%, #151230 60%, #100e22 78%, #0b0916 100%) no-repeat #07060B">
+<div ref="{{ bgNoiseRef }}" style="position:absolute; inset:0; z-index:5; pointer-events:none; opacity:.2; background:url('assets/archive/tv-static.webp') 0 0 repeat; background-size:300px 300px; animation:r505-static .7s steps(1,end) infinite; mix-blend-mode:screen; filter:sepia(1) hue-rotate(212deg) saturate(3.4) brightness(.72); transition:opacity 700ms var(--ease-out)"></div>
+<div id="site-bg-layer" ref="{{ bgRef }}" style="position:absolute; inset:0; z-index:0; pointer-events:none; opacity:0; filter:blur(16px) saturate(.35) brightness(.5); transform:scale(1.035); transition:opacity 1100ms var(--ease-out), filter 1100ms var(--ease-out), transform 1100ms var(--ease-out); will-change:opacity,filter,transform; background:url('assets/archive/site-bg-full.png') 50% 0 / cover no-repeat"></div>
 <x-import component-from-global-scope="Room505IridescentChromeDesignSystem_087d63.GrainOverlay" grain-src="assets/grain.png" hint-size="100%,100%"></x-import>
 <section style="position:relative; min-height:100svh; display:grid; place-items:center; padding:var(--space-7) 0; scroll-snap-align:start">
-  <div style="position:relative; z-index:3; text-align:center; padding:0 var(--gutter); max-width:900px">
+  <div ref="{{ heroRef }}" style="position:relative; z-index:3; text-align:center; padding:0 var(--gutter); max-width:900px; opacity:0; filter:blur(14px); transition:opacity 900ms var(--ease-out), filter 900ms var(--ease-out); will-change:opacity,filter">
     <x-import component-from-global-scope="Room505IridescentChromeDesignSystem_087d63.SlashLabel" tone="secondary" hint-size="auto,14px">Внутрішній архів студії</x-import>
-    <h1 style="font-family:'Tektur',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.01em; line-height:1.04; color:var(--lav-050); margin:var(--space-5) 0 0; font-size:clamp(3rem,7vw,6.5rem)">Room 505</h1>
+    <h1 data-hero-bloom="1" style="font-family:'Tektur',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.01em; line-height:1.04; color:var(--lav-050); margin:var(--space-5) 0 0; font-size:clamp(3rem,7vw,6.5rem); text-shadow:0 0 18px rgba(244,240,255,.34), 0 0 46px rgba(124,92,255,.28); animation:r505-glowbreathe 7s var(--ease-in-out) infinite">Room 505</h1>
     <p style="margin:var(--space-5) auto 0; max-width:520px; font-size:var(--fs-body); color:var(--lav-200); line-height:1.75; text-wrap:pretty; display:flex; align-items:center; justify-content:center; gap:.7em"><span style="letter-spacing:.18em">2015</span><span style="width:3.4em; height:2px; border-radius:2px; background:var(--lav-050); box-shadow:0 0 10px rgba(244,240,255,.45)"></span><span style="display:flex; color:var(--lav-050); filter:drop-shadow(0 0 10px rgba(244,240,255,.4))"><x-import component-from-global-scope="Room505IridescentChromeDesignSystem_087d63.Icon" name="infinity" size="30" hint-size="30px,30px"></x-import></span></p>
   </div>
 </section>
@@ -607,6 +634,8 @@ class Component extends DCLogic {
   componentWillUnmount() {
     window.removeEventListener('resize', this._onResize);
     window.removeEventListener('hashchange', this._onHash);
+    window.removeEventListener('scroll', this._onHeroScroll);
+    if (this._heroRaf) cancelAnimationFrame(this._heroRaf);
     clearInterval(this._scr); clearTimeout(this._fx1); clearTimeout(this._fx2);
     clearTimeout(this._ph1); clearTimeout(this._ph2); clearTimeout(this._sw);
   }
@@ -662,8 +691,81 @@ class Component extends DCLogic {
       if (p && p.photo) this.preloadPhoto(p.photo);
     }
   }
+  // шапка гасне на переході до архіву: відчуття «зайшли всередину».
+  // ставимо стиль напряму по ref — без ререндера на кожен кадр скролу
+  bindHeroFade() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const apply = () => {
+      this._heroRaf = 0;
+      const el = this.hero && this.hero.current;
+      // до проявлення фону шапка ще не показана — не перебиваємо її вхідний стан
+      if (!el || !this._heroReady) return;
+      const p = Math.min(1, Math.max(0, window.scrollY / (window.innerHeight * 0.75)));
+      el.style.opacity = (1 - p * 0.85).toFixed(3);
+      el.style.transform = 'scale(' + (1 - p * 0.02).toFixed(4) + ')';
+    };
+    this._onHeroScroll = () => { if (!this._heroRaf) this._heroRaf = requestAnimationFrame(apply); };
+    window.addEventListener('scroll', this._onHeroScroll, { passive: true });
+    apply();
+  }
+  // трекінг заголовка — один раз за сесію: при кожному скролі назад це був би трюк
+  playTrackIn() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let seen = false;
+    try { seen = sessionStorage.getItem('r505-track-in') === '1'; } catch (e) {}
+    if (seen) return;
+    const el = this.hero && this.hero.current && this.hero.current.querySelector('[data-hero-bloom]');
+    if (!el) return;
+    el.style.animation = 'r505-track 560ms var(--ease-out) 140ms both, r505-glowbreathe 7s var(--ease-in-out) 700ms infinite';
+    try { sessionStorage.setItem('r505-track-in', '1'); } catch (e) {}
+  }
+  // фон не з'являється ривком: чекаємо завантаження кадру й проявляємо його
+  revealBg() {
+    const el = this.bg && this.bg.current;
+    if (!el) return;
+    const show = () => {
+      // переходом, а не кейфреймом: зупинена анімація з fill:both тримала 0%
+      // і фон лишався прозорим назовсім
+      el.style.opacity = '1';
+      el.style.filter = 'none';
+      el.style.transform = 'none';
+      // шум тримається повну силу, поки кадр проявляється — саме він і прикриває
+      // підміну заглушки на повне зображення; далі гасне і зупиняється назовсім
+      // текст шапки проявляється разом із фоном — з розмиття
+      const h = this.hero && this.hero.current;
+      if (h) {
+        h.style.opacity = '1';
+        h.style.filter = 'none';
+        setTimeout(() => {
+          h.style.transition = 'none';
+          this._heroReady = true;
+          if (this._onHeroScroll) this._onHeroScroll();
+        }, 950);
+      } else {
+        this._heroReady = true;
+      }
+      const n = this.bgNoise && this.bgNoise.current;
+      if (!n) return;
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const hold = reduce ? 0 : 900;
+      setTimeout(() => {
+        n.style.opacity = '0';
+        setTimeout(() => { n.style.animation = 'none'; n.style.display = 'none'; }, reduce ? 0 : 760);
+      }, hold);
+    };
+    const src = window.matchMedia('(max-width: 900px)').matches
+      ? IMG + 'site-bg-mobile.webp' : IMG + 'site-bg-full.png';
+    const im = new Image();
+    im.onload = show;
+    im.onerror = show;
+    im.src = src;
+    if (im.complete) show();
+  }
   componentDidMount() {
     this.trackWidth();
+    this.revealBg();
+    this.bindHeroFade();
+    this.playTrackIn();
     this.applyHash();
     this._onHash = () => this.applyHash();
     window.addEventListener('hashchange', this._onHash);
@@ -822,6 +924,22 @@ class Component extends DCLogic {
         ref: this.refs3d[p.id], year: p.year, title: p.title,
         onDown: e => {
           e.preventDefault();
+          // на телефоні драгу немає: смуга касет прокручується пальцем,
+          // а тап відкриває проєкт — перетягування конфліктувало зі скролом
+          if (narrow || e.pointerType === 'touch') {
+            let slid = false;
+            const move = ev => {
+              if (Math.abs(ev.clientX - e.clientX) + Math.abs(ev.clientY - e.clientY) > 10) slid = true;
+            };
+            const up = () => {
+              window.removeEventListener('pointermove', move);
+              window.removeEventListener('pointerup', up);
+              if (!slid) this.loadTape(p.id);
+            };
+            window.addEventListener('pointermove', move);
+            window.addEventListener('pointerup', up);
+            return;
+          }
           const el = this.refs3d[p.id].current;
           const r = el ? el.getBoundingClientRect() : null;
           const w = r ? r.width : 150, h = r ? r.height : 268;
@@ -898,8 +1016,11 @@ class Component extends DCLogic {
           willChange: 'transform'
         },
         cardStyle: {
-          position: 'relative', cursor: isDragging ? 'grabbing' : 'grab', touchAction: 'none',
-          transform: 'translate(' + pull + 'px,' + yield_ + 'px) rotate(' + (this.state.hot === p.id ? 0 : sc.rot).toFixed(1) + 'deg) rotateX(' + s.rx.toFixed(2) + 'deg) rotateY(' + s.ry.toFixed(2) + 'deg) scale(' + (hot ? 1.12 : sc.depth.toFixed(2)) + ')',
+          position: 'relative', cursor: narrow ? 'pointer' : (isDragging ? 'grabbing' : 'grab'),
+          // на телефоні палець має прокручувати смугу, тому touchAction не блокуємо
+          touchAction: narrow ? 'pan-x' : 'none',
+          // збільшення на телефоні майже вимкнене: касета налазила на екран ТВ
+          transform: 'translate(' + pull + 'px,' + yield_ + 'px) rotate(' + (this.state.hot === p.id ? 0 : sc.rot).toFixed(1) + 'deg) rotateX(' + s.rx.toFixed(2) + 'deg) rotateY(' + s.ry.toFixed(2) + 'deg) scale(' + (hot ? (narrow ? 1.03 : 1.12) : sc.depth.toFixed(2)) + ')',
           transition: hot ? 'transform 120ms var(--ease-out), opacity 120ms linear, filter 120ms linear' : 'transform var(--dur-base) var(--ease-out), opacity 120ms linear, filter var(--dur-base) var(--ease-out)',
           filter: hot ? 'none' : 'blur(' + sc.blur.toFixed(2) + 'px)',
           opacity: isDragging ? 0.14 : (hot || isRead ? 1 : 0.55 + sc.depth * 0.4)
@@ -937,16 +1058,21 @@ class Component extends DCLogic {
       // колонки читаються як текст: ліва — перша половина зверху вниз, права — решта
       tapesLeft: narrow ? tapes : tapes.slice(0, Math.ceil(tapes.length / 2)),
       tapesRight: narrow ? [] : tapes.slice(Math.ceil(tapes.length / 2)),
+      bgRef: (this.bg = this.bg || React.createRef()),
+      bgNoiseRef: (this.bgNoise = this.bgNoise || React.createRef()),
+      heroRef: (this.hero = this.hero || React.createRef()),
       panelRef: this.panel,
       read: readP ? {
         year: readP.year, title: readP.title, struck: readP.struck || '', people: readP.people, text: readP.text,
         // з кадром метадані стискаємо в один рядок, щоб титри влізли в нижню третину
         // шлях як у файловій системі: рік / категорія [/ тип проєкту]
-        metaLine: readP.photo
+        // на телефоні метарядок і таблицю прибираємо: три дрібні рядки
+        // з'їдали третину екрана, а опис не влазив
+        metaLine: (readP.photo && !narrow)
           ? [readP.year, readP.type === 'Подія' ? 'подія' : 'проект', readP.type === 'Подія' ? null : readP.type]
               .filter(Boolean).join(' / ')
           : '',
-        rows: readP.photo ? [] : [
+        rows: (readP.photo || narrow) ? [] : [
           { k: 'Тип', v: readP.type },
           { k: 'Замовник', v: readP.client },
           { k: 'Платформа', v: readP.platform }
@@ -1000,9 +1126,16 @@ class Component extends DCLogic {
         order: 2, width: '100%', position: 'relative',
         display: 'flex', flexDirection: 'row', justifyContent: 'flex-start',
         alignItems: 'flex-start', gap: 'clamp(10px,3vw,20px)', flexWrap: 'nowrap',
-        overflowX: 'auto', overflowY: 'hidden',
+        overflowX: 'auto', overflowY: 'clip',
         scrollSnapType: 'x proximity', WebkitOverflowScrolling: 'touch',
-        scrollbarWidth: 'none', padding: '4px clamp(12px,8vw,60px) 10px',
+        scrollbarWidth: 'none',
+        // запас по вертикалі, щоб світіння й тінь підсвіченої касети не обрізались
+        // рамкою скрол-контейнера — саме це малювало смугу поверх фону
+        padding: '26px clamp(12px,8vw,60px) 30px', marginTop: 'clamp(8px,3vw,20px)',
+        // скрол-контейнер завжди ріже вміст по рамці; розмиваємо саму рамку,
+        // щоб замість жорсткої горизонтальної грані було затухання
+        maskImage: 'linear-gradient(to bottom, transparent 0, #000 22px, #000 calc(100% - 26px), transparent 100%)',
+        WebkitMaskImage: 'linear-gradient(to bottom, transparent 0, #000 22px, #000 calc(100% - 26px), transparent 100%)',
         // дрейф касет ±45px по X не має рахуватись у скрол
         overscrollBehaviorX: 'contain'
       } : {
@@ -1564,7 +1697,7 @@ class Component extends DCLogic {
       textStyle: {
         margin: narrow ? '7px 0 0' : '10px 0 0',
         maxWidth: narrow ? '100%' : ((readP && readP.photo) ? '78%' : '100%'),
-        fontSize: narrow ? 13 : 'clamp(12px,1.05vw,14px)', lineHeight: narrow ? 1.45 : 1.55,
+        fontSize: narrow ? 14 : 'clamp(12px,1.05vw,14px)', lineHeight: narrow ? 1.5 : 1.55,
         color: 'var(--lav-050)', textWrap: 'pretty'
       },
       crewStyle: {
