@@ -252,7 +252,7 @@
   </div>
 </section>
 
-<div id="archive" style="position:relative; min-height:100svh; display:flex; align-items:center; scroll-snap-align:start; overflow:hidden">
+<div id="archive" style="position:relative; min-height:100svh; display:flex; align-items:center; scroll-snap-align:start; overflow:clip; overflow-clip-margin:160px">
 <sc-for list="{{ floaters }}" as="f" hint-placeholder-count="6">
   <div style="{{ f.style }}"></div>
 </sc-for>
@@ -358,7 +358,7 @@
 </div>
 </div>
 
-<div id="team" onClick="{{ onTeamBgClick }}" style="position:relative; min-height:100svh; display:flex; align-items:center; padding:var(--space-7) 0; scroll-snap-align:start; overflow:hidden">
+<div id="team" onClick="{{ onTeamBgClick }}" style="position:relative; min-height:100svh; display:flex; align-items:center; padding:var(--space-7) 0; scroll-snap-align:start; overflow:clip; overflow-clip-margin:160px">
   <sc-for list="{{ diskFloaters }}" as="d" hint-placeholder-count="4">
     <div style="{{ d.style }}"></div>
   </sc-for>
@@ -1179,6 +1179,7 @@ class Component extends DCLogic {
         position: 'relative', zIndex: 4, flex: '1 1 auto', alignSelf: 'center',
         width: '100%', maxWidth: 1000,
         aspectRatio: '1841 / 1333',
+        // секції мають overflow-clip-margin, тому довга тінь більше не ріжеться по межі
         filter: 'drop-shadow(0 40px 64px rgba(0,0,0,.72))'
       },
       // світло з екрана розливається на стіну за корпусом
@@ -1225,12 +1226,12 @@ class Component extends DCLogic {
         position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
         background: 'url("' + pic(IMG + 'tv-body-v2.png') + '") center / contain no-repeat',
         transformOrigin: '50% 100%',
-        transform: 'scaleY(.075) translateY(30%)',
-        filter: 'brightness(0) blur(11px)',
+        transform: 'scaleY(.055) translateY(24%)',
+        filter: 'brightness(0) blur(18px)',
         // затухання вниз і по краях — інакше сплющений силуєт читається як чорна планка
-        maskImage: 'radial-gradient(64% 100% at 50% 0%,#000 0%,rgba(0,0,0,.55) 46%,transparent 100%)',
-        WebkitMaskImage: 'radial-gradient(64% 100% at 50% 0%,#000 0%,rgba(0,0,0,.55) 46%,transparent 100%)',
-        opacity: 0.6
+        maskImage: 'radial-gradient(52% 100% at 50% 0%,#000 0%,rgba(0,0,0,.4) 40%,transparent 88%)',
+        WebkitMaskImage: 'radial-gradient(52% 100% at 50% 0%,#000 0%,rgba(0,0,0,.4) 40%,transparent 88%)',
+        opacity: 0.4
       },
       // корпус лежить ПОВЕРХ екрана — у нього справжні прорізи
       bodyStyle: {
